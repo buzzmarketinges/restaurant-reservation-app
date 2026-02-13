@@ -1,0 +1,203 @@
+.container {
+    min-height: 100vh;
+    padding: 40px;
+    background-color: var(--md-sys-color-background);
+    color: var(--md-sys-color-on-background);
+    font-family: var(--md-sys-typescale-body-large-font);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.title {
+    font-family: var(--md-sys-typescale-headline-medium-font);
+    color: var(--md-sys-color-primary);
+    font-size: 32px;
+}
+
+.backLink {
+    color: var(--md-sys-color-secondary);
+    text-decoration: none;
+    font-size: 0.9rem;
+    padding: 8px 16px;
+    border: 1px solid var(--md-sys-color-outline);
+    border-radius: 100px;
+    transition: all 0.2s;
+}
+
+.backLink:hover {
+    background-color: var(--md-sys-color-surface-variant);
+}
+
+/* Tabs */
+.tabsContainer {
+    max-width: 900px;
+    margin: 0 auto 32px;
+    display: flex;
+    gap: 8px;
+    border-bottom: 1px solid var(--md-sys-color-outline);
+}
+
+.tab {
+    padding: 12px 24px;
+    background: transparent;
+    border: none;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--md-sys-color-secondary);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+}
+
+.tab:hover {
+    background-color: rgba(0, 0, 0, 0.03);
+}
+
+.activeTab {
+    color: var(--md-sys-color-primary);
+    border-bottom-color: var(--md-sys-color-primary);
+}
+
+.card {
+    background-color: var(--md-sys-color-surface);
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px;
+    border-radius: var(--md-sys-shape-corner-extra-large);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    min-height: 500px;
+}
+
+.section {
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.sectionTitle {
+    font-family: var(--md-sys-typescale-headline-medium-font);
+    font-size: 20px;
+    color: var(--md-sys-color-secondary);
+    margin-bottom: 24px;
+    border-bottom: 2px solid var(--md-sys-color-primary-container);
+    padding-bottom: 8px;
+    display: inline-block;
+}
+
+.daysGrid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.dayButton {
+    padding: 10px 20px;
+    border: 1px solid var(--md-sys-color-outline);
+    background: transparent;
+    color: var(--md-sys-color-on-surface-variant);
+    border-radius: var(--md-sys-shape-corner-medium);
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s;
+}
+
+.dayButton:hover {
+    background-color: var(--md-sys-color-surface-variant);
+}
+
+.dayActive {
+    background-color: var(--md-sys-color-primary);
+    color: var(--md-sys-color-on-primary);
+    border-color: var(--md-sys-color-primary);
+}
+
+.timeGroup {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 24px;
+    margin-bottom: 24px;
+}
+
+.label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--md-sys-color-secondary);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 700;
+}
+
+.input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--md-sys-color-outline);
+    border-radius: var(--md-sys-shape-corner-small);
+    background: var(--md-sys-color-background);
+    font-size: 1rem;
+    color: var(--md-sys-color-on-surface);
+}
+
+.input:focus {
+    outline: 2px solid var(--md-sys-color-primary);
+    border-color: transparent;
+}
+
+.divider {
+    border: 0;
+    border-top: 1px solid var(--md-sys-color-surface-variant);
+    margin: 32px 0;
+}
+
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 40px;
+    border-top: 1px solid var(--md-sys-color-surface-variant);
+    padding-top: 24px;
+}
+
+.saveButton {
+    background-color: var(--md-sys-color-primary);
+    color: var(--md-sys-color-on-primary);
+    padding: 14px 32px;
+    border: none;
+    border-radius: var(--md-sys-shape-corner-full);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(130, 95, 60, 0.3);
+    transition: transform 0.1s;
+}
+
+.saveButton:active {
+    transform: scale(0.98);
+}
+
+.message {
+    margin-top: 20px;
+    text-align: center;
+    font-weight: 500;
+    color: var(--md-sys-color-tertiary);
+}

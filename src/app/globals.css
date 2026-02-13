@@ -1,0 +1,72 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Lato:wght@300;400;700&display=swap');
+
+:root {
+  /* Luxury/Sober Palette - "Gilded Charcoal" */
+
+  /* Colors */
+  --md-sys-color-primary: #D4AF37;
+  /* Metallic Gold */
+  --md-sys-color-on-primary: #1A1A1A;
+  --md-sys-color-primary-container: #4A3F10;
+  --md-sys-color-on-primary-container: #FFEFA8;
+
+  --md-sys-color-secondary: #A0A0A0;
+  /* Silver/Gray */
+  --md-sys-color-on-secondary: #E0E0E0;
+
+  --md-sys-color-tertiary: #C19A6B;
+  /* Bronzeish */
+  --md-sys-color-error: #FF6666;
+
+  --md-sys-color-background: #0F0F0F;
+  /* Almost Black */
+  --md-sys-color-on-background: #F5F5F5;
+
+  --md-sys-color-surface: #1E1E1E;
+  /* Dark Grey Cards */
+  --md-sys-color-on-surface: #E0E0E0;
+  --md-sys-color-surface-variant: #2D2D2D;
+  --md-sys-color-on-surface-variant: #B0B0B0;
+
+  --md-sys-color-outline: #444444;
+  --md-sys-color-outline-variant: #333333;
+
+  /* Typography - 'Outfit' (Rounded Sans) */
+  --md-sys-typescale-display-large: 57px;
+  --md-sys-typescale-display-large-font: 'Outfit', sans-serif;
+  --md-sys-typescale-headline-medium: 28px;
+  --md-sys-typescale-headline-medium-font: 'Outfit', sans-serif;
+  --md-sys-typescale-body-large: 16px;
+  --md-sys-typescale-body-large-font: 'Outfit', sans-serif;
+
+  /* Shapes */
+  --md-sys-shape-corner-small: 8px;
+  --md-sys-shape-corner-medium: 16px;
+  --md-sys-shape-corner-large: 24px;
+  --md-sys-shape-corner-extra-large: 32px;
+  --md-sys-shape-corner-full: 1000px;
+
+  /* Easing */
+  --md-sys-motion-easing-standard: cubic-bezier(0.2, 0, 0, 1);
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  background-color: var(--md-sys-color-background);
+  color: var(--md-sys-color-on-background);
+  font-family: var(--md-sys-typescale-body-large-font);
+  font-size: var(--md-sys-typescale-body-large-size);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}

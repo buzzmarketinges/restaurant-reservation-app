@@ -1,0 +1,176 @@
+.container {
+    min-height: 100vh;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #000;
+}
+
+.card {
+    width: 100%;
+    max-width: 800px;
+    background-color: var(--md-sys-color-surface);
+    border-radius: var(--md-sys-shape-corner-extra-large);
+    box-shadow: 0 4px 8px 3px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+    /* Elevation 1 */
+    overflow: hidden;
+    transition: transform 0.2s var(--md-sys-motion-easing-standard);
+}
+
+.header {
+    padding: 32px 24px;
+    background-color: var(--md-sys-color-background);
+    color: var(--md-sys-color-primary);
+    border-bottom: 1px solid var(--md-sys-color-surface-variant);
+}
+
+.title {
+    font-family: var(--md-sys-typescale-headline-medium-font);
+    font-size: var(--md-sys-typescale-headline-medium-size);
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.content {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.sectionTitle {
+    font-family: var(--md-sys-typescale-body-large-font);
+    font-weight: 700;
+    color: var(--md-sys-color-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.9rem;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 12px;
+}
+
+.button {
+    padding: 12px 16px;
+    border: 1px solid var(--md-sys-color-outline);
+    border-radius: var(--md-sys-shape-corner-medium);
+    background: transparent;
+    color: var(--md-sys-color-on-surface);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: var(--md-sys-typescale-body-large-font);
+}
+
+.button:hover {
+    background-color: var(--md-sys-color-secondary-container);
+    border-color: var(--md-sys-color-secondary-container);
+}
+
+.buttonSelected {
+    background-color: var(--md-sys-color-primary);
+    color: var(--md-sys-color-on-primary);
+    border-color: var(--md-sys-color-primary);
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.label {
+    font-size: 0.9rem;
+    color: var(--md-sys-color-on-surface-variant);
+}
+
+.input,
+.textarea {
+    padding: 16px;
+    border: 1px solid var(--md-sys-color-outline);
+    border-radius: var(--md-sys-shape-corner-small);
+    background-color: var(--md-sys-color-surface);
+    font-family: inherit;
+    color: var(--md-sys-color-on-surface);
+    /* Ensure text is visible */
+    font-size: 1rem;
+}
+
+/* Calendar Styles (Customizing react-day-picker) */
+.calendarWrapper {
+    display: flex;
+    justify-content: center;
+    background: #151515;
+    padding: 16px;
+    border-radius: 16px;
+    border: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.calendarWrapper :global(.rdp) {
+    --rdp-cell-size: 40px;
+    --rdp-accent-color: var(--md-sys-color-primary);
+    --rdp-background-color: var(--md-sys-color-primary-container);
+    margin: 0;
+}
+
+.calendarWrapper :global(.rdp-day_selected) {
+    background-color: var(--md-sys-color-primary);
+    color: var(--md-sys-color-on-primary);
+    font-weight: bold;
+    border-radius: 50%;
+    /* Circle shape */
+}
+
+.calendarWrapper :global(.rdp-day:hover:not(.rdp-day_selected)) {
+    background-color: var(--md-sys-color-surface-variant);
+    border-radius: 50%;
+}
+
+.calendarWrapper :global(.rdp-button[disabled]) {
+    opacity: 0.25;
+}
+
+.calendarWrapper :global(.rdp-nav_button) {
+    color: var(--md-sys-color-primary);
+}
+
+.calendarWrapper :global(.rdp-caption_label) {
+    color: var(--md-sys-color-primary);
+    font-family: var(--md-sys-typescale-headline-medium-font);
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+
+.input:focus,
+.textarea:focus {
+    outline: 2px solid var(--md-sys-color-primary);
+    border-color: transparent;
+}
+
+.submitButton {
+    background-color: var(--md-sys-color-primary);
+    color: var(--md-sys-color-on-primary);
+    padding: 18px;
+    border-radius: var(--md-sys-shape-corner-full);
+    border: none;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 16px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.submitButton:disabled {
+    background-color: var(--md-sys-color-outline);
+    cursor: not-allowed;
+}
