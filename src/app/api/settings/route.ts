@@ -38,9 +38,8 @@ const DEFAULT_CONFIG = {
 
 export async function GET() {
     try {
-        // Use RAW query to bypass stale Prisma Client definitions
-        const result: any[] = await prisma.$queryRaw`SELECT * FROM Settings LIMIT 1`;
-        const settings = result[0];
+        // Use Prisma Client to avoid raw query issues
+        const settings = await prisma.settings.findFirst();
 
         if (!settings) {
             return NextResponse.json(DEFAULT_CONFIG);
@@ -89,81 +88,53 @@ export async function POST(request: Request) {
         };
 
         const jsonConfig = JSON.stringify(configToStore);
-        const updatedAt = new Date().toISOString();
 
-        // Check for existing settings
-        const existingResult: any[] = await prisma.$queryRaw`SELECT id FROM Settings LIMIT 1`;
-        const existing = existingResult[0];
+        // Find existing
+        const existing = await prisma.settings.findFirst();
 
         if (existing) {
-            // Raw Update
-            await prisma.$executeRaw`
-                UPDATE Settings SET 
-                    availabilityConfig = ${jsonConfig},
-                    restaurantName = ${data.restaurantName ?? ""},
-                    address = ${data.address ?? ""},
-                    logoPath = ${data.logoPath ?? ""},
-                    
-                    emailSubjectPending = ${data.emailSubjectPending ?? ""},
-                    emailTemplatePending = ${data.emailTemplatePending ?? ""},
-                    emailSubjectConfirmed = ${data.emailSubjectConfirmed ?? ""},
-                    emailTemplateConfirmed = ${data.emailTemplateConfirmed ?? ""},
-                    emailSubjectCanceled = ${data.emailSubjectCanceled ?? ""},
-                    emailTemplateCanceled = ${data.emailTemplateCanceled ?? ""},
-                    
-                    smtpHost = ${data.smtpHost ?? ""},
-                    smtpPort = ${data.smtpPort ?? 587},
-                    smtpUser = ${data.smtpUser ?? ""},
-                    smtpPass = ${data.smtpPass ?? ""},
-                    updatedAt = ${updatedAt}
-                WHERE id = ${existing.id}
-            `;
+            await prisma.settings.update({
+                where: { id: existing.id },
+                data: {
+                    availabilityConfig: jsonConfig,
+                    restaurantName: data.restaurantName,
+                    address: data.address,
+                    logoPath: data.logoPath,
+
+                    emailSubjectPending: data.emailSubjectPending,
+                    emailTemplatePending: data.emailTemplatePending,
+                    emailSubjectConfirmed: data.emailSubjectConfirmed,
+                    emailTemplateConfirmed: data.emailTemplateConfirmed,
+                    emailSubjectCanceled: data.emailSubjectCanceled,
+                    emailTemplateCanceled: data.emailTemplateCanceled,
+
+                    smtpHost: data.smtpHost,
+                    smtpPort: data.smtpPort || 587,
+                    smtpUser: data.smtpUser,
+                    smtpPass: data.smtpPass
+                }
+            });
         } else {
-            // Raw Insert
-            const newId = crypto.randomUUID();
-            await prisma.$executeRaw`
-                INSERT INTO Settings (
-                    id, 
-                    createdAt, 
-                    updatedAt, 
-                    availabilityConfig, 
-                    restaurantName, 
-                    address,
-                    logoPath,
-                    
-                    emailSubjectPending,
-                    emailTemplatePending,
-                    emailSubjectConfirmed,
-                    emailTemplateConfirmed,
-                    emailSubjectCanceled,
-                    emailTemplateCanceled,
-                    
-                    smtpHost,
-                    smtpPort,
-                    smtpUser,
-                    smtpPass
-                ) VALUES (
-                    ${newId},
-                    ${updatedAt},
-                    ${updatedAt},
-                    ${jsonConfig},
-                    ${data.restaurantName ?? ""},
-                    ${data.address ?? ""},
-                    ${data.logoPath ?? ""},
-                    
-                    ${data.emailSubjectPending ?? ""},
-                    ${data.emailTemplatePending ?? ""},
-                    ${data.emailSubjectConfirmed ?? ""},
-                    ${data.emailTemplateConfirmed ?? ""},
-                    ${data.emailSubjectCanceled ?? ""},
-                    ${data.emailTemplateCanceled ?? ""},
-                    
-                    ${data.smtpHost ?? ""},
-                    ${data.smtpPort ?? 587},
-                    ${data.smtpUser ?? ""},
-                    ${data.smtpPass ?? ""}
-                )
-            `;
+            await prisma.settings.create({
+                data: {
+                    availabilityConfig: jsonConfig,
+                    restaurantName: data.restaurantName,
+                    address: data.address,
+                    logoPath: data.logoPath,
+
+                    emailSubjectPending: data.emailSubjectPending,
+                    emailTemplatePending: data.emailTemplatePending,
+                    emailSubjectConfirmed: data.emailSubjectConfirmed,
+                    emailTemplateConfirmed: data.emailTemplateConfirmed,
+                    emailSubjectCanceled: data.emailSubjectCanceled,
+                    emailTemplateCanceled: data.emailTemplateCanceled,
+
+                    smtpHost: data.smtpHost,
+                    smtpPort: data.smtpPort || 587,
+                    smtpUser: data.smtpUser,
+                    smtpPass: data.smtpPass
+                }
+            });
         }
 
         return NextResponse.json({ success: true });

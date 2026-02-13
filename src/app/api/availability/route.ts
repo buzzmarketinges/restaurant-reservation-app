@@ -28,9 +28,9 @@ export async function GET(request: Request) {
         };
 
         try {
-            const settingsResult: any[] = await prisma.$queryRaw`SELECT availabilityConfig FROM Settings LIMIT 1`;
-            if (settingsResult[0]) {
-                const parsed = JSON.parse(settingsResult[0].availabilityConfig);
+            const settings = await prisma.settings.findFirst();
+            if (settings) {
+                const parsed = JSON.parse(settings.availabilityConfig);
                 config = { ...config, ...parsed };
             }
         } catch (dbError) {
