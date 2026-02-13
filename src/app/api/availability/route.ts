@@ -56,7 +56,7 @@ export async function GET(request: Request) {
         const endOfDay = new Date(targetDate);
         endOfDay.setHours(23, 59, 59, 999);
 
-        let existingReservations = [];
+        let existingReservations: any[] = [];
         try {
             existingReservations = await prisma.reservation.findMany({
                 where: {
