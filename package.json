@@ -33,5 +33,10 @@
     "eslint-config-next": "16.1.6",
     "prisma": "5.19.1",
     "typescript": "^5"
+  },
+  "overrides": {
+    "next-auth": {
+      "nodemailer": "$nodemailer"
+    }
   }
 }
