@@ -84,36 +84,21 @@ export default function SettingsPage() {
         });
     };
 
-    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        const formData = new FormData();
-        formData.append('file', file);
-
-        try {
-            const res = await fetch('/api/settings/upload', {
-                method: 'POST',
-                body: formData
-            });
-            const data = await res.json();
-            if (res.ok) {
-                // Determine full path or relative?
-                // backend returned filename and publicUrl.
-                // We should store the relative path for the emailer (public/uploads/...) or just filename?
-                // The emailer needs filesystem path: join(process.cwd(), 'public', 'uploads', filename)
-                // The frontend needs public URL: /uploads/filename
-                // Let's store just the 'filename' in the DB as logoPath (or full relative path)
-                // Actually if I store '/uploads/filename.jpg', I can use it directly in frontend.
-                // And in backend I can just join(process.cwd(), 'public', logoPath).
-                setForm(prev => ({ ...prev, logoPath: `/uploads/${data.filename}` }));
-            } else {
-                alert('Falló la subida del logo');
-            }
-        } catch (err) {
-            console.error(err);
-            alert('Error al subir imagen');
+        if (file.size > 2 * 1024 * 1024) {
+            alert("La imagen es demasiado grande. Máximo 2MB.");
+            return;
         }
+
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            const base64 = reader.result as string;
+            setForm(prev => ({ ...prev, logoPath: base64 }));
+        };
+        reader.readAsDataURL(file);
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
