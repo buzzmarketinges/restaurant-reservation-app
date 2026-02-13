@@ -116,24 +116,42 @@
 }
 
 .calendarWrapper :global(.rdp) {
-    --rdp-cell-size: 40px;
+    --rdp-cell-size: 45px;
+    /* Slightly larger for better touch */
     --rdp-accent-color: var(--md-sys-color-primary);
-    --rdp-background-color: var(--md-sys-color-primary-container);
+    --rdp-background-color: rgba(212, 175, 55, 0.2);
+    --rdp-outline: none;
+    --rdp-outline-selected: none;
     margin: 0;
+}
+
+.calendarWrapper :global(.rdp-button) {
+    border-radius: 50% !important;
+    border: none !important;
 }
 
 .calendarWrapper :global(.rdp-day_selected),
 .calendarWrapper :global(.rdp-selected) {
     background-color: rgba(212, 175, 55, 0.2) !important;
+    /* Transparent Yellow Fill */
     color: var(--md-sys-color-primary) !important;
+    /* Yellow Text */
     border: 1px solid var(--md-sys-color-primary) !important;
+    /* Yellow Border */
     font-weight: bold;
-    border-radius: 50%;
+    border-radius: 50% !important;
 }
 
 .calendarWrapper :global(.rdp-day:hover:not(.rdp-day_selected)) {
     background-color: var(--md-sys-color-surface-variant);
-    border-radius: 50%;
+    border-radius: 50% !important;
+}
+
+.calendarWrapper :global(.rdp-button:focus-visible),
+.calendarWrapper :global(.rdp-button:focus) {
+    outline: none !important;
+    background-color: var(--md-sys-color-surface-variant);
+    border: 1px solid var(--md-sys-color-primary) !important;
 }
 
 .calendarWrapper :global(.rdp-button[disabled]) {
