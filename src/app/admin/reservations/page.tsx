@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { format, addDays, startOfDay, isSameDay } from 'date-fns';
@@ -19,7 +19,7 @@ interface Reservation {
     notes?: string;
 }
 
-export default function ReservationsList() {
+function ReservationsContent() {
     const [reservations, setReservations] = useState<Reservation[]>([]);
     const [updating, setUpdating] = useState<string | null>(null);
     const [selectedDate, setSelectedDate] = useState<Date>(new Date());
@@ -362,5 +362,25 @@ export default function ReservationsList() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function ReservationsList() {
+    return (
+        <Suspense fallback={
+            <div style={{
+                padding: '40px',
+                textAlign: 'center',
+                color: 'var(--md-sys-color-secondary)',
+                minHeight: '100vh',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+            }}>
+                Cargando...
+            </div>
+        }>
+            <ReservationsContent />
+        </Suspense>
     );
 }
