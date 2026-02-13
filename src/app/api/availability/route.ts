@@ -37,16 +37,46 @@ export async function GET(request: Request) {
             console.warn('DB Settings fetch failed, using defaults:', dbError);
         }
 
-        // Check if open on this day
-        if (!config.daysOpen.includes(dayOfWeek)) {
-            return NextResponse.json({
-                date: dateString,
-                slots: [],
-                message: 'El restaurante está cerrado este día.'
-            });
+
+        // 1.5 Check Special Days (Overrides)
+        const specialDay = await prisma.specialDay.findUnique({
+            where: { date: new Date(dateString) }
+        });
+
+        if (specialDay) {
+            if (specialDay.isClosed) {
+                return NextResponse.json({
+                    date: dateString,
+                    slots: [],
+                    message: 'El restaurante está cerrado este día (Horario Especial).'
+                });
+            }
+            // Override config with special day hours if present
+            if (specialDay.lunchStart && specialDay.lunchEnd) {
+                config.lunch = { start: specialDay.lunchStart, end: specialDay.lunchEnd };
+            }
+            if (specialDay.dinnerStart && specialDay.dinnerEnd) {
+                config.dinner = { start: specialDay.dinnerStart, end: specialDay.dinnerEnd };
+            }
+            // If open on special day, ignore daysOpen check? 
+            // Usually yes, a special day implies it IS open unless isClosed=true.
+            // So we skip the "daysOpen" check below.
+        } else {
+            // Standard Check
+            if (!config.daysOpen.includes(dayOfWeek)) {
+                return NextResponse.json({
+                    date: dateString,
+                    slots: [],
+                    message: 'El restaurante está cerrado este día.'
+                });
+            }
+
+            // TODO: In future, if we implement per-day standard schedule in config,
+            // we would check it here before falling back to global config.lunch.
+            // For now, staying with global lunch/dinner times unless special day override.
         }
 
-        // Generate slots based on config
+        // Generate slots
         const lunchSlots = generateSlots(config.lunch.start, config.lunch.end, config.interval);
         const dinnerSlots = generateSlots(config.dinner.start, config.dinner.end, config.interval);
 
@@ -119,6 +149,7 @@ export async function GET(request: Request) {
 
 // Helper to generate intervals
 function generateSlots(start: string, end: string, intervalMinutes: number): string[] {
+    if (!start || !end) return []; // Safety
     const slots: string[] = [];
     const [startH, startM] = start.split(':').map(Number);
     const [endH, endM] = end.split(':').map(Number);

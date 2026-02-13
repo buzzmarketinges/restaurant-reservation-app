@@ -70,3 +70,34 @@ a {
   color: inherit;
   text-decoration: none;
 }
+
+/* Global Focus Override - Kill the Blue */
+*:focus-visible {
+  outline: 2px solid var(--md-sys-color-primary) !important;
+  outline-offset: 2px;
+}
+
+/* React Day Picker Global Overrides */
+.rdp {
+  --rdp-cell-size: 45px;
+  --rdp-accent-color: var(--md-sys-color-primary);
+  --rdp-background-color: rgba(212, 175, 55, 0.2);
+  --rdp-outline: 2px solid var(--md-sys-color-primary);
+  --rdp-outline-selected: 2px solid var(--md-sys-color-primary);
+  margin: 0;
+}
+
+.rdp-button:hover:not([disabled]):not(.rdp-day_selected) {
+  background-color: var(--md-sys-color-surface-variant);
+  color: var(--md-sys-color-primary);
+}
+
+.rdp-day_today {
+  font-weight: bold;
+  color: var(--md-sys-color-primary);
+}
+
+.rdp-day_selected {
+  background-color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+}

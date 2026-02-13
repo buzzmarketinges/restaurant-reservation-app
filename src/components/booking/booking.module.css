@@ -152,6 +152,16 @@
     outline: none !important;
     background-color: var(--md-sys-color-surface-variant);
     border: 1px solid var(--md-sys-color-primary) !important;
+    box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.3);
+    /* Subtle glow */
+}
+
+.calendarWrapper :global(.rdp-day_today) {
+    font-weight: 900 !important;
+    color: var(--md-sys-color-primary) !important;
+    border: none !important;
+    /* Kill borders */
+    background: transparent !important;
 }
 
 .calendarWrapper :global(.rdp-button[disabled]) {

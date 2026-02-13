@@ -58,6 +58,20 @@ model Settings {
   smtpPass       String @default("")
 }
 
+model SpecialDay {
+  id        String   @id @default(uuid())
+  date      DateTime @unique
+  isClosed  Boolean  @default(false)
+  
+  lunchStart String?
+  lunchEnd   String?
+  dinnerStart String?
+  dinnerEnd   String?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model User {
   id        String   @id @default(uuid())
   email     String   @unique

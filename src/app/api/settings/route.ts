@@ -26,7 +26,10 @@ const settingsSchema = z.object({
     smtpHost: z.string().optional(),
     smtpPort: z.coerce.number().optional(),
     smtpUser: z.string().optional(),
-    smtpPass: z.string().optional()
+    smtpPass: z.string().optional(),
+
+    // New: Schedule Config Object
+    schedules: z.any().optional()
 });
 
 const DEFAULT_CONFIG = {
@@ -84,7 +87,8 @@ export async function POST(request: Request) {
             daysOpen: data.daysOpen,
             lunch: { start: data.lunchStart, end: data.lunchEnd },
             dinner: { start: data.dinnerStart, end: data.dinnerEnd },
-            interval: 30
+            interval: 30,
+            schedules: data.schedules // Store new schedule format
         };
 
         const jsonConfig = JSON.stringify(configToStore);

@@ -201,3 +201,14 @@
     font-weight: 500;
     color: var(--md-sys-color-tertiary);
 }
+
+.calendarWrapper {
+    display: flex;
+    justify-content: center;
+    background: #151515;
+    padding: 24px;
+    border-radius: 16px;
+    border: 1px solid var(--md-sys-color-outline-variant);
+    max-width: fit-content;
+    margin: 0 auto;
+}
