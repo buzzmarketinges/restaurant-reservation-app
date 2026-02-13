@@ -122,12 +122,13 @@
     margin: 0;
 }
 
-.calendarWrapper :global(.rdp-day_selected) {
-    background-color: var(--md-sys-color-primary);
-    color: var(--md-sys-color-on-primary);
+.calendarWrapper :global(.rdp-day_selected),
+.calendarWrapper :global(.rdp-selected) {
+    background-color: rgba(212, 175, 55, 0.2) !important;
+    color: var(--md-sys-color-primary) !important;
+    border: 1px solid var(--md-sys-color-primary) !important;
     font-weight: bold;
     border-radius: 50%;
-    /* Circle shape */
 }
 
 .calendarWrapper :global(.rdp-day:hover:not(.rdp-day_selected)) {
