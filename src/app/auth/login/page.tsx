@@ -1,11 +1,11 @@
 'use client';
 
 import { signIn } from 'next-auth/react';
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import styles from './login.module.css';
 
-export default function LoginPage() {
+function LoginContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [email, setEmail] = useState('');
@@ -79,5 +79,13 @@ export default function LoginPage() {
                 </form>
             </div>
         </div>
+    );
+}
+
+export default function LoginPage() {
+    return (
+        <Suspense fallback={<div>Cargando...</div>}>
+            <LoginContent />
+        </Suspense>
     );
 }
