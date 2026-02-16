@@ -254,7 +254,7 @@ export default function BookingContainer() {
 
                             <div className={styles.formGroup}>
                                 <label className={styles.label}>Comensales</label>
-                                <div className={styles.grid} style={{ gridTemplateColumns: 'repeat(6, 1fr)', maxWidth: '360px' }}>
+                                <div className={styles.guestGrid}>
                                     {[1, 2, 3, 4, 5, 6].map(num => (
                                         <button
                                             key={num}
@@ -270,7 +270,7 @@ export default function BookingContainer() {
                                 </div>
                             </div>
 
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                            <div className={styles.nameGroup}>
                                 <div className={styles.formGroup}>
                                     <label className={styles.label}>Nombre *</label>
                                     <input className={styles.input} required value={formData.firstName} onChange={e => setFormData({ ...formData, firstName: e.target.value })} />

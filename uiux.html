@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Reservation - Date &amp; Time</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#d4af35",
+                        "background-light": "#f8f7f6",
+                        "background-dark": "#121212",
+                    },
+                    fontFamily: {
+                        "display": ["Work Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Work Sans', sans-serif;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #d4af35;
+            border-radius: 10px;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white min-h-screen flex flex-col">
+<!-- Top Navigation Bar -->
+<header class="sticky top-0 z-50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-primary/10">
+<div class="max-w-md mx-auto px-4 py-4 flex items-center justify-between">
+<button class="text-primary hover:bg-primary/10 p-2 rounded-full transition-colors">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="text-lg font-bold tracking-tight text-primary uppercase">Make a Reservation</h1>
+<button class="text-primary hover:bg-primary/10 p-2 rounded-full transition-colors">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+</header>
+<main class="flex-1 max-w-md mx-auto w-full px-4 py-6 pb-32">
+<!-- Step Indicator -->
+<div class="mb-8">
+<div class="flex items-center justify-between mb-2">
+<span class="text-xs font-bold text-primary uppercase tracking-widest">Step 1 of 3</span>
+<span class="text-xs font-medium text-primary/60 uppercase tracking-widest">Date &amp; Time</span>
+</div>
+<div class="flex w-full gap-2">
+<div class="h-1.5 flex-1 rounded-full bg-primary"></div>
+<div class="h-1.5 flex-1 rounded-full bg-primary/20"></div>
+<div class="h-1.5 flex-1 rounded-full bg-primary/20"></div>
+</div>
+</div>
+<!-- Calendar Section -->
+<section class="bg-primary/5 rounded-xl p-4 border border-primary/10 mb-8">
+<div class="flex items-center justify-between mb-6">
+<button class="p-2 text-primary hover:bg-primary/10 rounded-lg transition-colors">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<h2 class="text-lg font-bold text-white">October 2023</h2>
+<button class="p-2 text-primary hover:bg-primary/10 rounded-lg transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+<div class="grid grid-cols-7 gap-1 text-center mb-2">
+<span class="text-[10px] font-bold text-primary/50 uppercase">Sun</span>
+<span class="text-[10px] font-bold text-primary/50 uppercase">Mon</span>
+<span class="text-[10px] font-bold text-primary/50 uppercase">Tue</span>
+<span class="text-[10px] font-bold text-primary/50 uppercase">Wed</span>
+<span class="text-[10px] font-bold text-primary/50 uppercase">Thu</span>
+<span class="text-[10px] font-bold text-primary/50 uppercase">Fri</span>
+<span class="text-[10px] font-bold text-primary/50 uppercase">Sat</span>
+</div>
+<div class="grid grid-cols-7 gap-1">
+<!-- Row 1 -->
+<button class="aspect-square flex items-center justify-center text-sm text-white/20 cursor-default">24</button>
+<button class="aspect-square flex items-center justify-center text-sm text-white/20 cursor-default">25</button>
+<button class="aspect-square flex items-center justify-center text-sm text-white/20 cursor-default">26</button>
+<button class="aspect-square flex items-center justify-center text-sm text-white/20 cursor-default">27</button>
+<button class="aspect-square flex items-center justify-center text-sm text-white/20 cursor-default">28</button>
+<button class="aspect-square flex items-center justify-center text-sm text-white/20 cursor-default">29</button>
+<button class="aspect-square flex items-center justify-center text-sm text-white font-medium hover:bg-primary/20 rounded-lg">1</button>
+<!-- Row 2 -->
+<button class="aspect-square flex items-center justify-center text-sm text-white font-medium hover:bg-primary/20 rounded-lg">2</button>
+<button class="aspect-square flex items-center justify-center text-sm text-white font-medium hover:bg-primary/20 rounded-lg">3</button>
+<button class="aspect-square flex items-center justify-center text-sm text-white font-medium hover:bg-primary/20 rounded-lg">4</button>
+<button class="aspect-square flex items-center justify-center text-sm bg-primary text-background-dark font-bold rounded-lg shadow-[0_0_15px_rgba(212,175,53,0.3)]">5</button>
+<button class="aspect-square flex items-center justify-center text-sm text-white font-medium hover:bg-primary/20 rounded-lg">6</button>
+<button class="aspect-square flex items-center justify-center text-sm text-white font-medium hover:bg-primary/20 rounded-lg">7</button>
+<button class="aspect-square flex items-center justify-center text-sm text-white font-medium hover:bg-primary/20 rounded-lg">8</button>
+<!-- Row 3 -->
+<button class="aspect-square flex items-center justify-center text-sm text-white font-medium hover:bg-primary/20 rounded-lg">9</button>
+<button class="aspect-square flex items-center justify-center text-sm text-white font-medium hover:bg-primary/20 rounded-lg">10</button>
+<button class="aspect-square flex items-center justify-center text-sm text-white font-medium hover:bg-primary/20 rounded-lg">11</button>
+<button class="aspect-square flex items-center justify-center text-sm text-white font-medium hover:bg-primary/20 rounded-lg">12</button>
+<button class="aspect-square flex items-center justify-center text-sm text-white font-medium hover:bg-primary/20 rounded-lg border border-primary/40">13</button>
+<button class="aspect-square flex items-center justify-center text-sm text-white font-medium hover:bg-primary/20 rounded-lg">14</button>
+<button class="aspect-square flex items-center justify-center text-sm text-white font-medium hover:bg-primary/20 rounded-lg">15</button>
+</div>
+</section>
+<!-- Time Slots Section -->
+<div class="space-y-8">
+<!-- Lunch -->
+<div>
+<div class="flex items-center gap-3 mb-4">
+<span class="material-symbols-outlined text-primary text-sm">wb_sunny</span>
+<h3 class="text-sm font-bold text-primary uppercase tracking-[0.2em]">Lunch</h3>
+<div class="h-px flex-1 bg-primary/10"></div>
+</div>
+<div class="grid grid-cols-4 gap-3">
+<button class="py-3 px-1 rounded-lg bg-primary/10 border border-primary/20 text-white text-xs font-semibold hover:bg-primary/20 transition-all">12:00 PM</button>
+<button class="py-3 px-1 rounded-lg bg-primary text-background-dark text-xs font-bold shadow-lg shadow-primary/20">12:30 PM</button>
+<button class="py-3 px-1 rounded-lg bg-primary/10 border border-primary/20 text-white text-xs font-semibold hover:bg-primary/20 transition-all">1:00 PM</button>
+<button class="py-3 px-1 rounded-lg bg-primary/10 border border-primary/20 text-white text-xs font-semibold hover:bg-primary/20 transition-all">1:30 PM</button>
+</div>
+</div>
+<!-- Dinner -->
+<div>
+<div class="flex items-center gap-3 mb-4">
+<span class="material-symbols-outlined text-primary text-sm">dark_mode</span>
+<h3 class="text-sm font-bold text-primary uppercase tracking-[0.2em]">Dinner</h3>
+<div class="h-px flex-1 bg-primary/10"></div>
+</div>
+<div class="grid grid-cols-4 gap-3">
+<button class="py-3 px-1 rounded-lg bg-primary/10 border border-primary/20 text-white text-xs font-semibold hover:bg-primary/20 transition-all">6:00 PM</button>
+<button class="py-3 px-1 rounded-lg bg-primary/10 border border-primary/20 text-white text-xs font-semibold hover:bg-primary/20 transition-all">6:30 PM</button>
+<button class="py-3 px-1 rounded-lg bg-primary/10 border border-primary/20 text-white text-xs font-semibold hover:bg-primary/20 transition-all">7:00 PM</button>
+<button class="py-3 px-1 rounded-lg bg-primary/10 border border-primary/20 text-white text-xs font-semibold hover:bg-primary/20 transition-all">7:30 PM</button>
+<button class="py-3 px-1 rounded-lg bg-primary/10 border border-primary/20 text-white text-xs font-semibold hover:bg-primary/20 transition-all">8:00 PM</button>
+<button class="py-3 px-1 rounded-lg bg-primary/10 border border-primary/20 text-white text-xs font-semibold hover:bg-primary/20 transition-all">8:30 PM</button>
+<button class="py-3 px-1 rounded-lg bg-primary/10 border border-primary/20 text-white text-xs font-semibold hover:bg-primary/20 transition-all opacity-50 cursor-not-allowed line-through">9:00 PM</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Sticky Footer Action -->
+<footer class="fixed bottom-0 left-0 right-0 z-50 p-4 bg-background-dark/95 backdrop-blur-xl border-t border-primary/20">
+<div class="max-w-md mx-auto space-y-4">
+<div class="flex justify-between items-center px-1">
+<div class="flex flex-col">
+<span class="text-[10px] text-primary/60 uppercase font-bold tracking-widest">Selected Slot</span>
+<span class="text-sm font-medium text-white">Thu, Oct 5 • 12:30 PM</span>
+</div>
+<div class="text-right">
+<span class="text-[10px] text-primary/60 uppercase font-bold tracking-widest">Est. Duration</span>
+<span class="text-sm font-medium text-white block">90 Minutes</span>
+</div>
+</div>
+<button class="w-full bg-primary hover:bg-primary/90 text-background-dark font-bold py-4 rounded-xl flex items-center justify-center gap-2 transition-all transform active:scale-[0.98] shadow-xl shadow-primary/10">
+<span>Continue to Guest Details</span>
+<span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</footer>
+</body></html>

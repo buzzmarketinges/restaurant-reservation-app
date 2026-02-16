@@ -203,3 +203,29 @@
     background-color: var(--md-sys-color-outline);
     cursor: not-allowed;
 }
+
+.nameGroup {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+}
+
+@media (min-width: 600px) {
+    .nameGroup {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.guestGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    max-width: 100%;
+}
+
+@media (min-width: 500px) {
+    .guestGrid {
+        grid-template-columns: repeat(6, 1fr);
+        max-width: 500px;
+    }
+}

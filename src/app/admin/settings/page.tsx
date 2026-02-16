@@ -214,6 +214,7 @@ export default function SettingsPage() {
 
     const saveSpecialDay = async () => {
         if (!selectedSpecialDay) return;
+        setSaving(true);
 
         const payload = {
             date: format(selectedSpecialDay, 'yyyy-MM-dd'),
@@ -229,15 +230,19 @@ export default function SettingsPage() {
 
             if (res.ok) {
                 const saved = await res.json();
-                // Update local list
                 setSpecialDays(prev => {
                     const filtered = prev.filter(d => new Date(d.date).toDateString() !== selectedSpecialDay.toDateString());
                     return [...filtered, saved];
                 });
                 setSpecialDayModalOpen(false);
+            } else {
+                const err = await res.json();
+                alert('Error al guardar: ' + (err.error || 'Desconocido'));
             }
         } catch (err) {
-            alert('Error al guardar día especial');
+            alert('Error al guardar día especial (conexión)');
+        } finally {
+            setSaving(false);
         }
     };
 
