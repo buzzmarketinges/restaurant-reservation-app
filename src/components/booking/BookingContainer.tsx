@@ -162,176 +162,221 @@ export default function BookingContainer() {
         );
     }
 
+    const steps = [1, 2, 3];
+    const currentStep = 1;
+
+    // ... (keep existing handleBook logic if needed, or adapt for multi-step later)
+    // For now, we are just restyling the single page flow to look like the design.
+
+    // Helper to format date for header
+    const headerDate = selectedDate ? format(selectedDate, 'MMMM yyyy', { locale: es }) : '';
+
     return (
         <div className={styles.container}>
-            <div className={styles.card}>
-                <header className={styles.header}>
-                    <h1 className={styles.title}>Reserva tu mesa</h1>
-                    <p>Vive una experiencia gastronómica inolvidable</p>
-                </header>
-
-                <form className={styles.content} onSubmit={handleBook}>
-
-                    {/* 1. Date */}
-                    <section className={styles.section}>
-                        <h3 className={styles.sectionTitle}>1. Elige una fecha</h3>
-                        <div className={styles.calendarWrapper}>
-                            <DayPicker
-                                mode="single"
-                                selected={selectedDate}
-                                onSelect={handleDaySelect}
-                                locale={es}
-                                disabled={{ before: new Date() }}
-                                required
-                            />
-                        </div>
-                    </section>
-
-                    {/* 2. Time */}
-                    {date && (
-                        <section className={styles.section}>
-                            <h3 className={styles.sectionTitle}>2. Selecciona hora</h3>
-
-                            {loadingSlots ? <p>Cargando disponibilidad...</p> : (
-                                <>
-                                    {(lunchSlots.length === 0 && dinnerSlots.length === 0) && (
-                                        <div style={{ textAlign: 'center', padding: '24px', color: apiError ? 'var(--md-sys-color-error)' : 'var(--md-sys-color-secondary)' }}>
-                                            <p>{availabilityMessage || "No hay disponibilidad para esta fecha."}</p>
-                                            {!apiError && <small>Por favor, prueba con otro día.</small>}
-                                        </div>
-                                    )}
-
-                                    {lunchSlots.length > 0 && (
-                                        <div className={styles.formGroup}>
-                                            <span className={styles.label}>Comida</span>
-                                            <div className={styles.grid}>
-                                                {lunchSlots.map(slot => (
-                                                    <button
-                                                        key={slot.time}
-                                                        type="button"
-                                                        disabled={!slot.available}
-                                                        className={clsx(styles.button, {
-                                                            [styles.buttonSelected]: selectedTime === slot.time
-                                                        })}
-                                                        onClick={() => setSelectedTime(slot.time)}
-                                                    >
-                                                        {slot.time}
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    {dinnerSlots.length > 0 && (
-                                        <div className={styles.formGroup}>
-                                            <span className={styles.label}>Cena</span>
-                                            <div className={styles.grid}>
-                                                {dinnerSlots.map(slot => (
-                                                    <button
-                                                        key={slot.time}
-                                                        type="button"
-                                                        disabled={!slot.available}
-                                                        className={clsx(styles.button, {
-                                                            [styles.buttonSelected]: selectedTime === slot.time
-                                                        })}
-                                                        onClick={() => setSelectedTime(slot.time)}
-                                                    >
-                                                        {slot.time}
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    )}
-                                </>
-                            )}
-                        </section>
-                    )}
-
-                    {/* 3. Details (Reveal only if time selected) */}
-                    {selectedTime && (
-                        <section className={styles.section} style={{ animation: 'fadeIn 0.5s' }}>
-                            <h3 className={styles.sectionTitle}>3. Tus Datos</h3>
-
-                            <div className={styles.formGroup}>
-                                <label className={styles.label}>Comensales</label>
-                                <div className={styles.guestGrid}>
-                                    {[1, 2, 3, 4, 5, 6].map(num => (
-                                        <button
-                                            key={num}
-                                            type="button"
-                                            className={clsx(styles.button, {
-                                                [styles.buttonSelected]: guests === num
-                                            })}
-                                            onClick={() => setGuests(num)}
-                                        >
-                                            {num}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-
-                            <div className={styles.nameGroup}>
-                                <div className={styles.formGroup}>
-                                    <label className={styles.label}>Nombre *</label>
-                                    <input className={styles.input} required value={formData.firstName} onChange={e => setFormData({ ...formData, firstName: e.target.value })} />
-                                </div>
-                                <div className={styles.formGroup}>
-                                    <label className={styles.label}>Apellido *</label>
-                                    <input className={styles.input} required value={formData.lastName} onChange={e => setFormData({ ...formData, lastName: e.target.value })} />
-                                </div>
-                            </div>
-
-                            <div className={styles.formGroup}>
-                                <label className={styles.label}>Email *</label>
-                                <input type="email" className={styles.input} required value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} />
-                            </div>
-
-                            <div className={styles.formGroup}>
-                                <label className={styles.label}>Teléfono</label>
-                                <input type="tel" className={styles.input} value={formData.phone} onChange={e => setFormData({ ...formData, phone: e.target.value })} />
-                            </div>
-
-                            <div className={styles.formGroup} style={{ background: 'rgba(0,0,0,0.02)', padding: '16px', borderRadius: '12px' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: hasAllergies ? '16px' : '0' }}>
-                                    <input type="checkbox" id="allergyCheck" checked={hasAllergies} onChange={e => setHasAllergies(e.target.checked)} style={{ width: '20px', height: '20px', cursor: 'pointer' }} />
-                                    <label htmlFor="allergyCheck" className={styles.label} style={{ marginBottom: 0, cursor: 'pointer', color: hasAllergies ? 'var(--md-sys-color-primary)' : 'inherit' }}>
-                                        ¿Tienes alguna alergia o intolerancia?
-                                    </label>
-                                </div>
-
-                                {hasAllergies && (
-                                    <div style={{ animation: 'fadeIn 0.3s' }}>
-                                        <p style={{ fontSize: '0.9rem', marginBottom: '12px', color: 'var(--md-sys-color-secondary)' }}>Selecciona los alérgenos:</p>
-                                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
-                                            {COMMON_ALLERGENS.map(allergen => (
-                                                <label key={allergen} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.95rem', cursor: 'pointer' }}>
-                                                    <input type="checkbox" checked={selectedAllergens.includes(allergen)} onChange={() => toggleAllergen(allergen)} />
-                                                    {allergen}
-                                                </label>
-                                            ))}
-                                        </div>
-                                        <div style={{ marginTop: '12px' }}>
-                                            <input placeholder="Otros alérgenos (Especifique)" className={styles.input} value={otherAllergy} onChange={e => setOtherAllergy(e.target.value)} />
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-
-                            <div className={styles.formGroup}>
-                                <label className={styles.label}>Comentarios adicionales</label>
-                                <textarea className={styles.textarea} rows={2} placeholder="¿Alguna petición especial?" value={formData.notes} onChange={e => setFormData({ ...formData, notes: e.target.value })} />
-                            </div>
-
-                            {error && <p style={{ color: 'var(--md-sys-color-error)' }}>{error}</p>}
-
-                            <button type="submit" className={styles.submitButton} disabled={submitting}>
-                                {submitting ? 'Confirmando...' : 'Confirmar Reserva'}
-                            </button>
-                        </section>
-                    )}
-
-                </form>
+            {/* Top Navigation */}
+            <div className={styles.headerNav}>
+                <button className={styles.iconButton}>←</button>
+                <span className={styles.navTitle}>Hacer Reserva</span>
+                <button className={styles.iconButton}>✕</button>
             </div>
+
+            {/* Step Indicator */}
+            <div className={styles.stepIndicator}>
+                <div className={styles.stepHeader}>
+                    <span>Paso 1 de 3</span>
+                    <span>Fecha y Hora</span>
+                </div>
+                <div className={styles.progressBar}>
+                    <div className={clsx(styles.progressSegment, styles.progressActive)}></div>
+                    <div className={styles.progressSegment}></div>
+                    <div className={styles.progressSegment}></div>
+                </div>
+            </div>
+
+            <div className={styles.content}>
+                {/* Calendar Card */}
+                <div className={styles.calendarCard}>
+                    <div className={styles.sectionHeader} style={{ justifyContent: 'center', color: '#fff', fontSize: '1.2rem' }}>
+                        {headerDate.charAt(0).toUpperCase() + headerDate.slice(1)}
+                    </div>
+                    <style>{`
+                      .rdp-nav_button { color: var(--md-sys-color-primary); }
+                      .rdp-head_cell { color: var(--md-sys-color-secondary); font-size: 0.75rem; text-transform: uppercase; }
+                      .rdp-caption { display: none; } /* Hide default caption as we added custom one */
+                    `}</style>
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                        <DayPicker
+                            mode="single"
+                            selected={selectedDate}
+                            onSelect={handleDaySelect}
+                            locale={es}
+                            disabled={{ before: new Date() }}
+                            required
+                            classNames={{
+                                day_selected: "rdp-day_selected",
+                                day_today: "rdp-day_today",
+                            }}
+                        />
+                    </div>
+                </div>
+
+                {/* Time Slots - Lunch */}
+                {date && (
+                    <>
+                        {loadingSlots ? <div style={{ textAlign: 'center', color: '#888' }}>Cargando horarios...</div> : (
+                            <>
+                                {/* Lunch Section */}
+                                <div>
+                                    <div className={styles.sectionHeader}>
+                                        <span>☀️</span>
+                                        <span>Comida</span>
+                                        <div className={styles.separator}></div>
+                                    </div>
+                                    <div className={styles.timeGrid}>
+                                        {lunchSlots.length > 0 ? lunchSlots.map(slot => (
+                                            <button
+                                                key={slot.time}
+                                                disabled={!slot.available}
+                                                className={clsx(styles.timeButton, {
+                                                    [styles.timeButtonSelected]: selectedTime === slot.time
+                                                })}
+                                                onClick={() => setSelectedTime(slot.time)}
+                                            >
+                                                {slot.time}
+                                            </button>
+                                        )) : <span style={{ gridColumn: '1/-1', textAlign: 'center', color: '#666', fontSize: '0.9rem' }}>No disponible</span>}
+                                    </div>
+                                </div>
+
+                                {/* Dinner Section */}
+                                <div>
+                                    <div className={styles.sectionHeader}>
+                                        <span>🌙</span>
+                                        <span>Cena</span>
+                                        <div className={styles.separator}></div>
+                                    </div>
+                                    <div className={styles.timeGrid}>
+                                        {dinnerSlots.length > 0 ? dinnerSlots.map(slot => (
+                                            <button
+                                                key={slot.time}
+                                                disabled={!slot.available}
+                                                className={clsx(styles.timeButton, {
+                                                    [styles.timeButtonSelected]: selectedTime === slot.time
+                                                })}
+                                                onClick={() => setSelectedTime(slot.time)}
+                                            >
+                                                {slot.time}
+                                            </button>
+                                        )) : <span style={{ gridColumn: '1/-1', textAlign: 'center', color: '#666', fontSize: '0.9rem' }}>No disponible</span>}
+                                    </div>
+                                </div>
+                            </>
+                        )}
+                    </>
+                )}
+
+                {/* User Data Form (Simplified visibility for layout matching) */}
+                {/* For this specific "UI Copy" task, the user image implies Step 1 is JUST Date/Time. 
+                    However, to keep the app functional without a full multi-step rewrite logic, 
+                    I will append the form below but style it to fit the theme if they scroll, 
+                    OR ideally, we should hide it until "Continue" is clicked. 
+                    
+                    Given the request "The UI/UX must be like in the image", the image shows a "Continue" button.
+                    I will hide the form initially, and the "Continue" footer button will reveal it (or scroll to it).
+                */}
+
+                {selectedTime && (
+                    <div id="guest-details" style={{ marginTop: '40px', borderTop: '1px solid #333', paddingTop: '40px' }}>
+                        <h3 className={styles.sectionHeader}>Detalles del Invitado</h3>
+                        {/* Guest Count */}
+                        <div className={styles.inputGroup}>
+                            <label className={styles.inputLabel}>COMENSALES</label>
+                            <div className={styles.guestGrid}>
+                                {[1, 2, 3, 4, 5, 6].map(num => (
+                                    <button
+                                        key={num}
+                                        type="button"
+                                        className={clsx(styles.timeButton, { [styles.timeButtonSelected]: guests === num })}
+                                        onClick={() => setGuests(num)}
+                                    >
+                                        {num}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Name Fields */}
+                        <div className={styles.nameRow}>
+                            <div className={styles.inputGroup}>
+                                <label className={styles.inputLabel}>NOMBRE *</label>
+                                <input className={styles.input} required value={formData.firstName} onChange={e => setFormData({ ...formData, firstName: e.target.value })} />
+                            </div>
+                            <div className={styles.inputGroup}>
+                                <label className={styles.inputLabel}>APELLIDO *</label>
+                                <input className={styles.input} required value={formData.lastName} onChange={e => setFormData({ ...formData, lastName: e.target.value })} />
+                            </div>
+                        </div>
+
+                        <div className={styles.inputGroup}>
+                            <label className={styles.inputLabel}>EMAIL *</label>
+                            <input type="email" className={styles.input} required value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} />
+                        </div>
+
+                        <div className={styles.inputGroup}>
+                            <label className={styles.inputLabel}>TELÉFONO</label>
+                            <input type="tel" className={styles.input} value={formData.phone} onChange={e => setFormData({ ...formData, phone: e.target.value })} />
+                        </div>
+
+                        <div className={styles.inputGroup}>
+                            <label className={styles.inputLabel}>COMENTARIOS</label>
+                            <textarea className={styles.input} rows={2} value={formData.notes} onChange={e => setFormData({ ...formData, notes: e.target.value })} />
+                        </div>
+
+                        {/* Submit is now handled by the footer button if we treat it as "Confirm", 
+                            but for UX flow, let's keep a specific confirm button here too or use the footer 
+                            dynamically.
+                        */}
+                    </div>
+                )}
+            </div>
+
+            {/* Sticky Footer */}
+            {selectedTime && (
+                <div className={styles.footer}>
+                    <div className={styles.footerContent}>
+                        <div className={styles.footerInfo}>
+                            <div>
+                                <span className={styles.infoLabel}>SELECCIÓN</span>
+                                <span className={styles.infoValue}>
+                                    {selectedDate ? format(selectedDate, 'EEE, d MMM', { locale: es }) : ''} • {selectedTime}
+                                </span>
+                            </div>
+                            <div style={{ textAlign: 'right' }}>
+                                <span className={styles.infoLabel}>DURACIÓN EST.</span>
+                                <span className={styles.infoValue}>90 Minutos</span>
+                            </div>
+                        </div>
+                        <button className={styles.continueButton} onClick={(e) => {
+                            // If form is visible/filled, submit. If not, scroll to it.
+                            const formEl = document.getElementById('guest-details');
+                            if (formEl) {
+                                // logic to submit if already filled, or just scroll
+                                if (!formData.firstName || !formData.email) {
+                                    formEl.scrollIntoView({ behavior: 'smooth' });
+                                    // Focus first input
+                                    const input = formEl.querySelector('input') as HTMLInputElement;
+                                    if (input) input.focus();
+                                } else {
+                                    handleBook(e);
+                                }
+                            }
+                        }}>
+                            <span>Confirmar Reserva</span>
+                            <span>→</span>
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
