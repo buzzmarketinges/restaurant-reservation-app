@@ -140,7 +140,10 @@ export default function SettingsPage() {
                 body: JSON.stringify(legacyPayload)
             });
             if (res.ok) setMsg('Configuración guardada.');
-            else setMsg('Error al guardar.');
+            else {
+                const data = await res.json();
+                setMsg(`Error al guardar: ${data.error || 'Desconocido'}`);
+            }
         } catch (err) {
             setMsg('Error de conexión.');
         } finally {
