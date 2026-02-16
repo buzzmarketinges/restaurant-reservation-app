@@ -76,61 +76,74 @@ a {
 }
 
 /* React Day Picker Global Overrides */
-/* React Day Picker Global Overrides - NO BLUE ALLOWED */
+/* React Day Picker Global Overrides - EXACT MATCH */
 .rdp {
   --rdp-cell-size: 45px;
   --rdp-accent-color: var(--md-sys-color-primary);
   --rdp-background-color: var(--md-sys-color-primary-container);
-
-  /* Selection Variables override */
-  --rdp-day_selected-background-color: var(--md-sys-color-primary);
-  --rdp-day_selected-color: #000000;
-
   margin: 0;
 }
 
-/* Base Button Style */
+/* Weekday Headers (SUN, MON...) */
+.rdp-head_cell {
+  color: var(--md-sys-color-primary) !important;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+}
+
+/* Navigation Arrow Buttons */
+.rdp-nav_button {
+  color: var(--md-sys-color-primary) !important;
+}
+
+.rdp-nav_button:hover {
+  background-color: rgba(235, 196, 93, 0.1) !important;
+  border-radius: 8px;
+}
+
+/* Default Day Style */
+.rdp-day {
+  color: #888888;
+  /* Dimmed by default */
+  font-weight: 500;
+}
+
+.rdp-day_outside {
+  opacity: 0.3;
+  /* Extra dimmed for outside days */
+}
+
+/* Hover State for Days */
 .rdp-button:hover:not([disabled]):not(.rdp-day_selected) {
-  background-color: var(--md-sys-color-surface-variant);
-  color: var(--md-sys-color-primary);
+  background-color: rgba(235, 196, 93, 0.1);
+  color: #ffffff;
   border-radius: 12px;
 }
 
-/* Today's Date */
+/* Today's Date - Outlined Gold Squircle */
 .rdp-day_today:not(.rdp-day_selected) {
-  font-weight: bold;
-  color: var(--md-sys-color-primary);
+  color: #ffffff !important;
   border: 1px solid var(--md-sys-color-primary);
   border-radius: 12px;
+  font-weight: 700;
 }
 
-/* Selected Date - The Main Target */
+/* Selected Date - Solid Gold Squircle */
 .rdp-day_selected,
 .rdp-day_selected:focus-visible,
 .rdp-day_selected:hover {
   background-color: var(--md-sys-color-primary) !important;
   color: #121212 !important;
-  font-weight: 800;
+  font-weight: 900;
   border-radius: 12px !important;
-  /* Squircle as per image */
   border: none !important;
   box-shadow: 0 0 15px rgba(235, 196, 93, 0.4);
-  outline: none !important;
 }
 
 /* Remove default focus rings */
 .rdp-button:focus-visible {
-  outline: 2px solid var(--md-sys-color-primary) !important;
-  outline-offset: 2px;
-  background-color: transparent;
+  outline: none !important;
+  background-color: rgba(235, 196, 93, 0.1);
   border-radius: 12px;
-}
-
-/* Navigation Buttons */
-.rdp-nav_button {
-  color: var(--md-sys-color-primary);
-}
-
-.rdp-nav_button:hover {
-  background-color: var(--md-sys-color-surface-variant) !important;
 }
