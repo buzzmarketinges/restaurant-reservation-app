@@ -121,15 +121,16 @@
     transition: all 0.2s;
 }
 
-.timeButton:hover:not(:disabled) {
+.timeButton:hover:not(:disabled):not(.timeButtonSelected) {
     background: rgba(235, 196, 93, 0.15);
 }
 
 .timeButtonSelected {
-    background-color: var(--md-sys-color-primary);
-    color: #000000;
-    border-color: var(--md-sys-color-primary);
+    background-color: var(--md-sys-color-primary) !important;
+    color: #000000 !important;
+    border-color: var(--md-sys-color-primary) !important;
     box-shadow: 0 0 15px rgba(235, 196, 93, 0.4);
+    font-weight: 700;
 }
 
 .timeButton:disabled {

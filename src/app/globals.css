@@ -76,34 +76,61 @@ a {
 }
 
 /* React Day Picker Global Overrides */
+/* React Day Picker Global Overrides - NO BLUE ALLOWED */
 .rdp {
   --rdp-cell-size: 45px;
   --rdp-accent-color: var(--md-sys-color-primary);
   --rdp-background-color: var(--md-sys-color-primary-container);
+
+  /* Selection Variables override */
   --rdp-day_selected-background-color: var(--md-sys-color-primary);
   --rdp-day_selected-color: #000000;
-  --rdp-outline: 2px solid var(--md-sys-color-primary);
-  --rdp-outline-selected: 2px solid var(--md-sys-color-primary);
+
   margin: 0;
 }
 
+/* Base Button Style */
 .rdp-button:hover:not([disabled]):not(.rdp-day_selected) {
   background-color: var(--md-sys-color-surface-variant);
   color: var(--md-sys-color-primary);
-  border-radius: 8px;
+  border-radius: 12px;
 }
 
+/* Today's Date */
 .rdp-day_today:not(.rdp-day_selected) {
   font-weight: bold;
   color: var(--md-sys-color-primary);
   border: 1px solid var(--md-sys-color-primary);
-  border-radius: 8px;
+  border-radius: 12px;
 }
 
-.rdp-day_selected {
+/* Selected Date - The Main Target */
+.rdp-day_selected,
+.rdp-day_selected:focus-visible,
+.rdp-day_selected:hover {
   background-color: var(--md-sys-color-primary) !important;
   color: #121212 !important;
-  font-weight: bold;
+  font-weight: 800;
   border-radius: 12px !important;
+  /* Squircle as per image */
+  border: none !important;
   box-shadow: 0 0 15px rgba(235, 196, 93, 0.4);
+  outline: none !important;
+}
+
+/* Remove default focus rings */
+.rdp-button:focus-visible {
+  outline: 2px solid var(--md-sys-color-primary) !important;
+  outline-offset: 2px;
+  background-color: transparent;
+  border-radius: 12px;
+}
+
+/* Navigation Buttons */
+.rdp-nav_button {
+  color: var(--md-sys-color-primary);
+}
+
+.rdp-nav_button:hover {
+  background-color: var(--md-sys-color-surface-variant) !important;
 }
