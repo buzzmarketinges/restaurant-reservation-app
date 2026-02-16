@@ -22,6 +22,9 @@ const settingsSchema = z.object({
     emailSubjectCanceled: z.string().optional(),
     emailTemplateCanceled: z.string().optional(),
 
+    // Validations
+    adminEmail: z.string().optional(),
+
     // SMTP
     smtpHost: z.string().optional(),
     smtpPort: z.coerce.number().optional(),
@@ -42,7 +45,7 @@ const DEFAULT_CONFIG = {
 export async function GET() {
     try {
         // Use Prisma Client to avoid raw query issues
-        const settings = await prisma.settings.findFirst();
+        const settings: any = await prisma.settings.findFirst();
 
         if (!settings) {
             return NextResponse.json(DEFAULT_CONFIG);
@@ -59,6 +62,8 @@ export async function GET() {
             restaurantName: settings.restaurantName || "",
             address: settings.address || "",
             logoPath: settings.logoPath || "",
+
+            adminEmail: settings.adminEmail || "",
 
             emailSubjectPending: settings.emailSubjectPending || "",
             emailTemplatePending: settings.emailTemplatePending || "",
@@ -105,6 +110,8 @@ export async function POST(request: Request) {
                     address: data.address,
                     logoPath: data.logoPath,
 
+                    adminEmail: data.adminEmail,
+
                     emailSubjectPending: data.emailSubjectPending,
                     emailTemplatePending: data.emailTemplatePending,
                     emailSubjectConfirmed: data.emailSubjectConfirmed,
@@ -116,7 +123,7 @@ export async function POST(request: Request) {
                     smtpPort: data.smtpPort || 587,
                     smtpUser: data.smtpUser,
                     smtpPass: data.smtpPass
-                }
+                } as any
             });
         } else {
             await prisma.settings.create({
@@ -126,6 +133,8 @@ export async function POST(request: Request) {
                     address: data.address,
                     logoPath: data.logoPath,
 
+                    adminEmail: data.adminEmail,
+
                     emailSubjectPending: data.emailSubjectPending,
                     emailTemplatePending: data.emailTemplatePending,
                     emailSubjectConfirmed: data.emailSubjectConfirmed,
@@ -137,7 +146,7 @@ export async function POST(request: Request) {
                     smtpPort: data.smtpPort || 587,
                     smtpUser: data.smtpUser,
                     smtpPass: data.smtpPass
-                }
+                } as any
             });
         }
 
