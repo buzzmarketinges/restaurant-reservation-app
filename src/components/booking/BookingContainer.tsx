@@ -174,10 +174,8 @@ export default function BookingContainer() {
     return (
         <div className={styles.container}>
             {/* Top Navigation */}
-            <div className={styles.headerNav}>
-                <button className={styles.iconButton}>←</button>
+            <div className={styles.headerNav} style={{ justifyContent: 'center' }}>
                 <span className={styles.navTitle}>Hacer Reserva</span>
-                <button className={styles.iconButton}>✕</button>
             </div>
 
             {/* Step Indicator */}
@@ -275,16 +273,7 @@ export default function BookingContainer() {
                     </>
                 )}
 
-                {/* User Data Form (Simplified visibility for layout matching) */}
-                {/* For this specific "UI Copy" task, the user image implies Step 1 is JUST Date/Time. 
-                    However, to keep the app functional without a full multi-step rewrite logic, 
-                    I will append the form below but style it to fit the theme if they scroll, 
-                    OR ideally, we should hide it until "Continue" is clicked. 
-                    
-                    Given the request "The UI/UX must be like in the image", the image shows a "Continue" button.
-                    I will hide the form initially, and the "Continue" footer button will reveal it (or scroll to it).
-                */}
-
+                {/* User Data Form */}
                 {selectedTime && (
                     <div id="guest-details" style={{ marginTop: '40px', borderTop: '1px solid #333', paddingTop: '40px' }}>
                         <h3 className={styles.sectionHeader}>Detalles del Invitado</h3>
@@ -327,9 +316,37 @@ export default function BookingContainer() {
                             <input type="tel" className={styles.input} value={formData.phone} onChange={e => setFormData({ ...formData, phone: e.target.value })} />
                         </div>
 
+                        <div className={styles.inputGroup} style={{ background: 'rgba(255,255,255,0.05)', padding: '16px', borderRadius: '12px', border: '1px solid #333' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: hasAllergies ? '16px' : '0' }}>
+                                <input type="checkbox" id="allergyCheck" checked={hasAllergies} onChange={e => setHasAllergies(e.target.checked)} style={{ width: '20px', height: '20px', cursor: 'pointer', accentColor: 'var(--md-sys-color-primary)' }} />
+                                <label htmlFor="allergyCheck" className={styles.inputLabel} style={{ marginBottom: 0, cursor: 'pointer', color: hasAllergies ? 'var(--md-sys-color-primary)' : 'inherit' }}>
+                                    ¿Tienes alguna alergia o intolerancia?
+                                </label>
+                            </div>
+
+                            {hasAllergies && (
+                                <div style={{ animation: 'fadeIn 0.3s' }}>
+                                    <p style={{ fontSize: '0.85rem', marginBottom: '12px', color: '#ccc' }}>Selecciona los alérgenos:</p>
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                                        {COMMON_ALLERGENS.map(allergen => (
+                                            <label key={allergen} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.9rem', cursor: 'pointer', color: '#eee' }}>
+                                                <input type="checkbox" checked={selectedAllergens.includes(allergen)} onChange={() => toggleAllergen(allergen)} style={{ accentColor: 'var(--md-sys-color-primary)' }} />
+                                                {allergen}
+                                            </label>
+                                        ))}
+                                    </div>
+                                    <div style={{ marginTop: '12px' }}>
+                                        <input placeholder="Otros alérgenos..." className={styles.input} value={otherAllergy} onChange={e => setOtherAllergy(e.target.value)} />
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
                         <div className={styles.inputGroup}>
                             <label className={styles.inputLabel}>COMENTARIOS</label>
                             <textarea className={styles.input} rows={2} value={formData.notes} onChange={e => setFormData({ ...formData, notes: e.target.value })} />
+                            {/* Make padding for footer visibility */}
+                            <div style={{ height: '60px' }}></div>
                         </div>
 
                         {/* Submit is now handled by the footer button if we treat it as "Confirm", 
@@ -337,46 +354,49 @@ export default function BookingContainer() {
                             dynamically.
                         */}
                     </div>
-                )}
-            </div>
+                )
+                }
+            </div >
 
             {/* Sticky Footer */}
-            {selectedTime && (
-                <div className={styles.footer}>
-                    <div className={styles.footerContent}>
-                        <div className={styles.footerInfo}>
-                            <div>
-                                <span className={styles.infoLabel}>SELECCIÓN</span>
-                                <span className={styles.infoValue}>
-                                    {selectedDate ? format(selectedDate, 'EEE, d MMM', { locale: es }) : ''} • {selectedTime}
-                                </span>
+            {
+                selectedTime && (
+                    <div className={styles.footer}>
+                        <div className={styles.footerContent}>
+                            <div className={styles.footerInfo}>
+                                <div>
+                                    <span className={styles.infoLabel}>SELECCIÓN</span>
+                                    <span className={styles.infoValue}>
+                                        {selectedDate ? format(selectedDate, 'EEE, d MMM', { locale: es }) : ''} • {selectedTime}
+                                    </span>
+                                </div>
+                                <div style={{ textAlign: 'right' }}>
+                                    <span className={styles.infoLabel}>DURACIÓN EST.</span>
+                                    <span className={styles.infoValue}>90 Minutos</span>
+                                </div>
                             </div>
-                            <div style={{ textAlign: 'right' }}>
-                                <span className={styles.infoLabel}>DURACIÓN EST.</span>
-                                <span className={styles.infoValue}>90 Minutos</span>
-                            </div>
-                        </div>
-                        <button className={styles.continueButton} onClick={(e) => {
-                            // If form is visible/filled, submit. If not, scroll to it.
-                            const formEl = document.getElementById('guest-details');
-                            if (formEl) {
-                                // logic to submit if already filled, or just scroll
-                                if (!formData.firstName || !formData.email) {
-                                    formEl.scrollIntoView({ behavior: 'smooth' });
-                                    // Focus first input
-                                    const input = formEl.querySelector('input') as HTMLInputElement;
-                                    if (input) input.focus();
-                                } else {
-                                    handleBook(e);
+                            <button className={styles.continueButton} onClick={(e) => {
+                                // If form is visible/filled, submit. If not, scroll to it.
+                                const formEl = document.getElementById('guest-details');
+                                if (formEl) {
+                                    // logic to submit if already filled, or just scroll
+                                    if (!formData.firstName || !formData.email) {
+                                        formEl.scrollIntoView({ behavior: 'smooth' });
+                                        // Focus first input
+                                        const input = formEl.querySelector('input') as HTMLInputElement;
+                                        if (input) input.focus();
+                                    } else {
+                                        handleBook(e);
+                                    }
                                 }
-                            }
-                        }}>
-                            <span>Confirmar Reserva</span>
-                            <span>→</span>
-                        </button>
+                            }}>
+                                <span>Confirmar Reserva</span>
+                                <span>→</span>
+                            </button>
+                        </div>
                     </div>
-                </div>
-            )}
-        </div>
+                )
+            }
+        </div >
     );
 }
