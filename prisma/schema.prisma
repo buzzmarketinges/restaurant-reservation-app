@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("POSTGRES_PRISMA_URL")
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
   directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
@@ -12,64 +12,49 @@ model Reservation {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  
-  date      DateTime // Stores just the date part ideally, or full datetime
-  timeSlot  String   // e.g. "14:00"
-  shift     String   // "LUNCH" | "DINNER"
+  date      DateTime
+  timeSlot  String
+  shift     String
   guests    Int
-  
-  // Customer Info
   firstName String
   lastName  String
   email     String
   phone     String?
   allergies String?
   notes     String?
-  
-  status    String   @default("PENDING") // PENDING, CONFIRMED, CANCELED
-  
+  status    String   @default("PENDING")
   emailSent Boolean  @default(false)
 }
 
 model Settings {
-  id        String   @id @default(uuid())
-  updatedAt DateTime @updatedAt
-
-  availabilityConfig String 
-  
-  // Restaurant Info
-  restaurantName String @default("Restaurante AI")
-  address        String @default("")
-  logoPath       String @default("") // For storing simple filename or path
-  
-  // Email settings
-  emailSubjectPending    String @default("Reserva Recibida - %restaurantName%")
-  emailTemplatePending   String @default("Hola %firstName%, hemos recibido tu solicitud de reserva para el %date%. Te confirmaremos pronto.")
-  
-  emailSubjectConfirmed  String @default("Reserva Confirmada - %restaurantName%")
-  emailTemplateConfirmed String @default("Hola %firstName%, tu mesa para %guests% personas está confirmada para el %date% a las %time%.")
-  
-  emailSubjectCanceled   String @default("Reserva Cancelada - %restaurantName%")
-  emailTemplateCanceled  String @default("Hola %firstName%, lamentamos informarte que tu reserva para el %date% ha sido cancelada.")
-
-  smtpHost       String @default("")
-  smtpPort       Int    @default(587)
-  smtpUser       String @default("")
-  smtpPass       String @default("")
+  id                     String   @id @default(uuid())
+  updatedAt              DateTime @updatedAt
+  availabilityConfig     String
+  restaurantName         String   @default("Restaurante AI")
+  address                String   @default("")
+  logoPath               String   @default("")
+  emailSubjectPending    String   @default("Reserva Recibida - %restaurantName%")
+  emailTemplatePending   String   @default("Hola %firstName%, hemos recibido tu solicitud de reserva para el %date%. Te confirmaremos pronto.")
+  emailSubjectConfirmed  String   @default("Reserva Confirmada - %restaurantName%")
+  emailTemplateConfirmed String   @default("Hola %firstName%, tu mesa para %guests% personas está confirmada para el %date% a las %time%.")
+  emailSubjectCanceled   String   @default("Reserva Cancelada - %restaurantName%")
+  emailTemplateCanceled  String   @default("Hola %firstName%, lamentamos informarte que tu reserva para el %date% ha sido cancelada.")
+  smtpHost               String   @default("")
+  smtpPort               Int      @default(587)
+  smtpUser               String   @default("")
+  smtpPass               String   @default("")
 }
 
 model SpecialDay {
-  id        String   @id @default(uuid())
-  date      DateTime @unique
-  isClosed  Boolean  @default(false)
-  
-  lunchStart String?
-  lunchEnd   String?
+  id          String   @id @default(uuid())
+  date        DateTime @unique
+  isClosed    Boolean  @default(false)
+  lunchStart  String?
+  lunchEnd    String?
   dinnerStart String?
   dinnerEnd   String?
-  
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model User {

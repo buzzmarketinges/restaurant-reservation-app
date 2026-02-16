@@ -147,16 +147,125 @@ export default function BookingContainer() {
         }
     };
 
+    // Helper to generate ICS for download
+    const handleDownloadICS = () => {
+        if (!selectedDate || !selectedTime) return;
+
+        const [hours, minutes] = selectedTime.split(':').map(Number);
+        const start = new Date(selectedDate);
+        start.setHours(hours, minutes);
+        const end = new Date(start);
+        end.setHours(hours + 2); // Assume 2 hours
+
+        const formatDate = (d: Date) => d.toISOString().replace(/-|:|\.\d+/g, '');
+
+        const icsContent = [
+            'BEGIN:VCALENDAR',
+            'VERSION:2.0',
+            'BEGIN:VEVENT',
+            `DTSTART:${formatDate(start)}`,
+            `DTEND:${formatDate(end)}`,
+            `SUMMARY:Reserva en Restaurante`,
+            `DESCRIPTION:Reserva para ${guests} personas. ID: ${confirmedId}`,
+            `LOCATION:Restaurante`,
+            'END:VEVENT',
+            'END:VCALENDAR'
+        ].join('\n');
+
+        const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `reserva-${confirmedId}.ics`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
     if (confirmedId) {
         return (
             <div className={styles.container}>
-                <div className={styles.card} style={{ textAlign: 'center', padding: '48px' }}>
-                    <h2 className={styles.title} style={{ color: 'var(--md-sys-color-primary)' }}>¡Reserva Confirmada!</h2>
-                    <p>Tu código de reserva es: <strong>{confirmedId}</strong></p>
-                    <p>Hemos enviado un correo a {formData.email} con los detalles.</p>
-                    <button className={styles.submitButton} onClick={() => window.location.reload()} style={{ marginTop: '24px' }}>
-                        Nueva Reserva
-                    </button>
+                <div className={styles.confirmationContainer}>
+                    <div className={styles.successIconWrapper}>
+                        <svg className={styles.successIcon} width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </div>
+
+                    <h2 className={styles.confTitle}>¡Reserva Confirmada!</h2>
+                    <p className={styles.confName}>{formData.firstName} {formData.lastName}</p>
+
+                    <div className={styles.ticketCard}>
+                        <div className={styles.ticketNumberRow}>
+                            <span>Nº CONFIRMACIÓN</span>
+                            <span style={{ color: '#fff' }}>{confirmedId.slice(0, 8).toUpperCase()}</span>
+                        </div>
+
+                        <div className={styles.ticketGrid}>
+                            <div className={styles.ticketItem}>
+                                <div className={styles.ticketLabel}>
+                                    <span>📅</span> FECHA
+                                </div>
+                                <div className={styles.ticketValue}>
+                                    {selectedDate ? format(selectedDate, 'd MMMM', { locale: es }) : ''}
+                                </div>
+                                <div style={{ fontSize: '0.8rem', color: '#666' }}>
+                                    {selectedDate ? format(selectedDate, 'yyyy') : ''}
+                                </div>
+                            </div>
+
+                            <div className={styles.ticketItem}>
+                                <div className={styles.ticketLabel}>
+                                    <span>🕒</span> HORA
+                                </div>
+                                <div className={styles.ticketValue}>
+                                    {selectedTime}h
+                                </div>
+                            </div>
+
+                            <div className={styles.ticketItem}>
+                                <div className={styles.ticketLabel}>
+                                    <span>👥</span> INVITADOS
+                                </div>
+                                <div className={styles.ticketValue}>
+                                    {guests} personas
+                                </div>
+                            </div>
+
+                            <div className={styles.ticketItem}>
+                                <div className={styles.ticketLabel}>
+                                    <span>🚫</span> ALERGIAS
+                                </div>
+                                <div className={styles.ticketValue} style={{ fontSize: '0.9rem' }}>
+                                    {hasAllergies && selectedAllergens.length > 0 ? selectedAllergens.join(', ') : 'Ninguna'}
+                                    {otherAllergy ? (hasAllergies && selectedAllergens.length > 0 ? `, ${otherAllergy}` : otherAllergy) : ''}
+                                </div>
+                            </div>
+                        </div>
+
+                        {formData.notes && (
+                            <div className={styles.ticketComments}>
+                                <div className={styles.ticketLabel} style={{ marginBottom: '8px' }}>
+                                    <span>☰</span> COMENTARIOS ADICIONALES
+                                </div>
+                                <p className={styles.commentText}>"{formData.notes}"</p>
+                            </div>
+                        )}
+                    </div>
+
+                    <div className={styles.actionButtons}>
+                        <button className={styles.btnPrimary} onClick={handleDownloadICS}>
+                            <span>📅</span> Añadir al calendario
+                        </button>
+                        <button className={styles.btnSecondary} onClick={() => window.location.reload()}>
+                            Modificar Reserva
+                        </button>
+                    </div>
+
+                    <p className={styles.footerNote}>
+                        Se enviará una confirmación adicional a su correo electrónico: {formData.email}.
+                        <br />Por favor, llegue 10 minutos antes de su cita.
+                    </p>
                 </div>
             </div>
         );
