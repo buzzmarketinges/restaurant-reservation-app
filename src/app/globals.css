@@ -123,6 +123,13 @@ a {
   opacity: 0.3;
 }
 
+/* Specific fix for Day Button internal element causing blue text/border */
+.rdp-day_button {
+  color: inherit !important;
+  border: none !important;
+  border-radius: 12px !important;
+}
+
 /* Hover State for Days */
 .rdp-button:hover:not([disabled]):not(.rdp-day_selected) {
   background-color: rgba(235, 196, 93, 0.1);
@@ -131,10 +138,11 @@ a {
 }
 
 /* Today's Date - Outlined Gold Squircle */
+.rdp-day_today:not(.rdp-day_selected) .rdp-day_button,
 .rdp-day_today:not(.rdp-day_selected) {
   color: #ffffff !important;
-  border: 1px solid var(--md-sys-color-primary);
-  border-radius: 12px;
+  border: 1px solid var(--md-sys-color-primary) !important;
+  border-radius: 12px !important;
   font-weight: 700;
 }
 

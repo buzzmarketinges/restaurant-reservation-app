@@ -221,55 +221,69 @@ export default function BookingContainer() {
                 {/* Time Slots - Lunch */}
                 {date && (
                     <>
-                        {loadingSlots ? <div style={{ textAlign: 'center', color: '#888' }}>Cargando horarios...</div> : (
-                            <>
-                                {/* Lunch Section */}
-                                <div>
-                                    <div className={styles.sectionHeader}>
-                                        <span>☀️</span>
-                                        <span>Comida</span>
-                                        <div className={styles.separator}></div>
-                                    </div>
-                                    <div className={styles.timeGrid}>
-                                        {lunchSlots.length > 0 ? lunchSlots.map(slot => (
-                                            <button
-                                                key={slot.time}
-                                                disabled={!slot.available}
-                                                className={clsx(styles.timeButton, {
-                                                    [styles.timeButtonSelected]: selectedTime === slot.time
-                                                })}
-                                                onClick={() => setSelectedTime(slot.time)}
-                                            >
-                                                {slot.time}
-                                            </button>
-                                        )) : <span style={{ gridColumn: '1/-1', textAlign: 'center', color: '#666', fontSize: '0.9rem' }}>No disponible</span>}
-                                    </div>
+                        {loadingSlots ? <div style={{ textAlign: 'center', color: '#888' }}>Cargando horarios...</div> :
+                            availabilityMessage ? (
+                                <div style={{
+                                    textAlign: 'center',
+                                    padding: '32px',
+                                    color: '#EBC45D',
+                                    background: 'rgba(235, 196, 93, 0.05)',
+                                    borderRadius: '12px',
+                                    border: '1px solid rgba(235, 196, 93, 0.2)',
+                                    marginTop: '24px'
+                                }}>
+                                    <span style={{ fontSize: '1.5rem', display: 'block', marginBottom: '8px' }}>⚠️</span>
+                                    <span style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>{availabilityMessage}</span>
                                 </div>
+                            ) : (
+                                <>
+                                    {/* Lunch Section */}
+                                    <div>
+                                        <div className={styles.sectionHeader}>
+                                            <span>☀️</span>
+                                            <span>Comida</span>
+                                            <div className={styles.separator}></div>
+                                        </div>
+                                        <div className={styles.timeGrid}>
+                                            {lunchSlots.length > 0 ? lunchSlots.map(slot => (
+                                                <button
+                                                    key={slot.time}
+                                                    disabled={!slot.available}
+                                                    className={clsx(styles.timeButton, {
+                                                        [styles.timeButtonSelected]: selectedTime === slot.time
+                                                    })}
+                                                    onClick={() => setSelectedTime(slot.time)}
+                                                >
+                                                    {slot.time}
+                                                </button>
+                                            )) : <span style={{ gridColumn: '1/-1', textAlign: 'center', color: '#666', fontSize: '0.9rem' }}>No disponible</span>}
+                                        </div>
+                                    </div>
 
-                                {/* Dinner Section */}
-                                <div>
-                                    <div className={styles.sectionHeader}>
-                                        <span>🌙</span>
-                                        <span>Cena</span>
-                                        <div className={styles.separator}></div>
+                                    {/* Dinner Section */}
+                                    <div>
+                                        <div className={styles.sectionHeader}>
+                                            <span>🌙</span>
+                                            <span>Cena</span>
+                                            <div className={styles.separator}></div>
+                                        </div>
+                                        <div className={styles.timeGrid}>
+                                            {dinnerSlots.length > 0 ? dinnerSlots.map(slot => (
+                                                <button
+                                                    key={slot.time}
+                                                    disabled={!slot.available}
+                                                    className={clsx(styles.timeButton, {
+                                                        [styles.timeButtonSelected]: selectedTime === slot.time
+                                                    })}
+                                                    onClick={() => setSelectedTime(slot.time)}
+                                                >
+                                                    {slot.time}
+                                                </button>
+                                            )) : <span style={{ gridColumn: '1/-1', textAlign: 'center', color: '#666', fontSize: '0.9rem' }}>No disponible</span>}
+                                        </div>
                                     </div>
-                                    <div className={styles.timeGrid}>
-                                        {dinnerSlots.length > 0 ? dinnerSlots.map(slot => (
-                                            <button
-                                                key={slot.time}
-                                                disabled={!slot.available}
-                                                className={clsx(styles.timeButton, {
-                                                    [styles.timeButtonSelected]: selectedTime === slot.time
-                                                })}
-                                                onClick={() => setSelectedTime(slot.time)}
-                                            >
-                                                {slot.time}
-                                            </button>
-                                        )) : <span style={{ gridColumn: '1/-1', textAlign: 'center', color: '#666', fontSize: '0.9rem' }}>No disponible</span>}
-                                    </div>
-                                </div>
-                            </>
-                        )}
+                                </>
+                            )}
                     </>
                 )}
 
