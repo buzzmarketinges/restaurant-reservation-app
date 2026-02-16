@@ -56,12 +56,12 @@ export async function sendReservationEmail(reservation: any, type: 'PENDING' | '
         const isSecure = smtpPort === 465;
 
         const transporter = nodemailer.createTransport({
-            host: settings.smtpHost,
+            host: settings.smtpHost.trim(),
             port: smtpPort,
             secure: isSecure,
             auth: {
-                user: settings.smtpUser,
-                pass: settings.smtpPass
+                user: settings.smtpUser.trim(),
+                pass: settings.smtpPass.trim()
             },
             tls: {
                 rejectUnauthorized: false // Sometimes helpful for self-signed certs or strict firewalls
