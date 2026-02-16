@@ -43,6 +43,7 @@ model Settings {
   smtpPort               Int      @default(587)
   smtpUser               String   @default("")
   smtpPass               String   @default("")
+  adminEmail             String   @default("")
 }
 
 model SpecialDay {

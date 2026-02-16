@@ -19,22 +19,25 @@ export async function PATCH(
         const { status } = updateSchema.parse(body);
 
         // Fetch current status
-        const reservation: any[] = await prisma.$queryRaw`SELECT * FROM Reservation WHERE id = ${id}`;
+        const reservation = await prisma.reservation.findUnique({
+            where: { id }
+        });
 
-        if (!reservation[0]) {
+        if (!reservation) {
             return NextResponse.json({ error: 'Reservation not found' }, { status: 404 });
         }
 
-        const currentStatus = reservation[0].status;
+        const currentStatus = reservation.status;
 
-        // Update Status using Raw Query
-        await prisma.$executeRaw`UPDATE Reservation SET status = ${status} WHERE id = ${id}`;
+        // Update Status using Prisma Client
+        const updatedReservation = await prisma.reservation.update({
+            where: { id },
+            data: { status }
+        });
 
         // Trigger Email
         if (status !== currentStatus) {
-            // Re-fetch updated or just pass object with new status
-            const updatedRev = { ...reservation[0], status };
-            await sendReservationEmail(updatedRev, status);
+            await sendReservationEmail(updatedReservation, status);
         }
 
         return NextResponse.json({ success: true });

@@ -37,27 +37,37 @@ END:VCALENDAR`;
 }
 
 export async function sendReservationEmail(reservation: any, type: 'PENDING' | 'CONFIRMED' | 'CANCELED') {
+    const logs: string[] = [];
+    const log = (msg: string) => {
+        console.log(msg);
+        logs.push(msg);
+    };
+    const errorLog = (msg: string, err?: any) => {
+        console.error(msg, err);
+        logs.push(`ERROR: ${msg} ${err ? JSON.stringify(err, Object.getOwnPropertyNames(err)) : ''}`);
+    };
+
+    log(`[Email] Starting process for Reservation ${reservation.id} (${type})`);
+
     try {
-        // Fetch settings using Prisma ORM to ensure correct mapping
         const settings: any = await prisma.settings.findFirst();
 
         if (!settings) {
-            console.error("No settings found for email sending.");
-            return false;
+            errorLog("No settings found in DB.");
+            return { success: false, logs };
         }
 
-        if (!settings) {
-            console.error("No settings found for email sending.");
-            return false;
-        }
+        log(`[Email] Settings loaded. Host: ${settings.smtpHost}, User: ${settings.smtpUser}, Admin: ${settings.adminEmail}`);
 
         if (!settings.smtpHost || !settings.smtpUser || !settings.smtpPass) {
-            console.warn("SMTP settings incomplete. skipping email.");
-            return false;
+            errorLog("SMTP settings incomplete. Aborting.");
+            return { success: false, logs };
         }
 
         const smtpPort = Number(settings.smtpPort) || 587;
         const isSecure = smtpPort === 465;
+
+        log(`[Email] Config: Host=${settings.smtpHost?.trim()}, Port=${smtpPort}, Secure=${isSecure}`);
 
         const transporter = nodemailer.createTransport({
             host: settings.smtpHost.trim(),
@@ -67,12 +77,18 @@ export async function sendReservationEmail(reservation: any, type: 'PENDING' | '
                 user: settings.smtpUser.trim(),
                 pass: settings.smtpPass.trim()
             },
-            tls: {
-                rejectUnauthorized: false // Sometimes helpful for self-signed certs or strict firewalls
-            }
+            tls: { rejectUnauthorized: false }
         });
 
-        // Template Selection
+        try {
+            await transporter.verify();
+            log("[Email] SMTP Connection verified.");
+        } catch (connError) {
+            errorLog("SMTP Connection verification failed", connError);
+            return { success: false, logs };
+        }
+
+        // ... Template logic ...
         let subject = "";
         let text = "";
 
@@ -92,7 +108,6 @@ export async function sendReservationEmail(reservation: any, type: 'PENDING' | '
                 break;
         }
 
-        // Replace variables
         const vars: Record<string, string> = {
             '%firstName%': reservation.firstName,
             '%lastName%': reservation.lastName,
@@ -110,39 +125,28 @@ export async function sendReservationEmail(reservation: any, type: 'PENDING' | '
 
         const icsContent = generateICS(reservation, settings);
 
-        console.log(`Sending email via ${settings.smtpHost}...`);
-
+        // Attachments logic
         let logoPath = path.join(process.cwd(), 'src', 'app', 'media', 'loremar.jpg');
-        const logoCid = 'restaurant-logo';
         let logoFilename = 'loremar.jpg';
 
         if (settings.logoPath) {
-            // stored as /uploads/filename.ext
-            // remove leading slash for path.join safely if needed, or just let join handle it
-            // path.join(cwd, 'public', '/uploads/...') might work or might double slash. 
-            // safest is to strip leading slash.
             const relativePath = settings.logoPath.startsWith('/') ? settings.logoPath.substring(1) : settings.logoPath;
             logoPath = path.join(process.cwd(), 'public', relativePath);
             logoFilename = path.basename(logoPath);
         }
 
-        const attachments: any[] = [];
-
-        // Only attach if we think it exists? Or try/catch? 
-        // Nodemailer might error if file not found. 
-        // Let's assume it exists if set.
-        attachments.push({
+        const attachments = [{
             filename: logoFilename,
             path: logoPath,
-            cid: logoCid
-        });
+            cid: 'restaurant-logo'
+        }];
 
         const mailOptions: any = {
             from: `"${settings.restaurantName || 'Reservas'}" <${settings.smtpUser}>`,
             to: reservation.email,
             subject: subject,
-            text: text, // Plain text body
-            html: text, // Allow user to provide full HTML in the template
+            text: text,
+            html: text,
             attachments: attachments,
             icalEvent: {
                 filename: 'invite.ics',
@@ -151,54 +155,48 @@ export async function sendReservationEmail(reservation: any, type: 'PENDING' | '
             }
         };
 
-        // 1. Send Client Email
-        await transporter.sendMail(mailOptions);
-
-        // 2. Send Admin Notification (Internal)
-        if (settings.adminEmail) {
-            const adminSubject = `🔔 Nueva Reserva: ${reservation.firstName} ${reservation.lastName} (${reservation.guests} pax)`;
-            const adminText = `
-Confirmación de Nueva Reserva:
-
-Cliente: ${reservation.firstName} ${reservation.lastName}
-Email: ${reservation.email}
-Teléfono: ${reservation.phone || 'No indicado'}
-
-Fecha: ${new Date(reservation.date).toLocaleDateString("es-ES")}
-Hora: ${reservation.timeSlot}
-Comensales: ${reservation.guests}
-
-Alergias: ${reservation.allergies || 'Ninguna'}
-Notas: ${reservation.notes || 'Ninguna'}
-
-Gestionar en el panel de administración.
-            `;
-
-            await transporter.sendMail({
-                from: `"${settings.restaurantName || 'Reservas'}" <${settings.smtpUser}>`,
-                to: settings.adminEmail,
-                subject: adminSubject,
-                text: adminText,
-                html: adminText.replace(/\n/g, '<br>')
-            });
-            console.log(`Admin notification sent to ${settings.adminEmail}`);
+        try {
+            await transporter.sendMail(mailOptions);
+            log(`[Email] Client email sent to ${reservation.email}`);
+        } catch (clientErr) {
+            errorLog("Failed to send to Client", clientErr);
         }
 
-        console.log(`Email sent successfully to ${reservation.email}`);
+        if (settings.adminEmail) {
+            log(`[Email] Sending Admin Notification to ${settings.adminEmail}`);
+            const adminSubject = `🔔 Nueva Reserva: ${reservation.firstName} (${reservation.guests} pax)`;
+            const adminText = `Nueva reserva de ${reservation.firstName} ${reservation.lastName} para el ${new Date(reservation.date).toLocaleDateString()} a las ${reservation.timeSlot}.`;
 
-        // Mark as sent in DB
-        // Use raw query to update if needed, but model might work for simple invalidation
+            try {
+                await transporter.sendMail({
+                    from: `"${settings.restaurantName}" <${settings.smtpUser}>`,
+                    to: settings.adminEmail,
+                    subject: adminSubject,
+                    text: adminText,
+                    html: adminText.replace(/\n/g, '<br>')
+                });
+                log(`[Email] Admin notification sent.`);
+            } catch (adminErr) {
+                errorLog("Failed to send to Admin", adminErr);
+            }
+        } else {
+            log("[Email] Admin email not configured.");
+        }
+
         try {
             await prisma.reservation.update({
                 where: { id: reservation.id },
                 data: { emailSent: true }
             });
-        } catch (e) { /* ignore loop update error */ }
+            log("[Email] DB marked as sent.");
+        } catch (e) {
+            errorLog("Failed to update DB status", e);
+        }
 
-        return true;
+        return { success: true, logs };
 
     } catch (error) {
-        console.error("Email sending failed:", error);
-        return false;
+        errorLog("CRITICAL FAILURE", error);
+        return { success: false, logs };
     }
 }
