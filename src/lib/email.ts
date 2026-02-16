@@ -38,9 +38,13 @@ END:VCALENDAR`;
 
 export async function sendReservationEmail(reservation: any, type: 'PENDING' | 'CONFIRMED' | 'CANCELED') {
     try {
-        // Fetch settings using RAW query to avoid stale client issues
-        const settingsResult: any[] = await prisma.$queryRaw`SELECT * FROM Settings LIMIT 1`;
-        const settings = settingsResult[0];
+        // Fetch settings using Prisma ORM to ensure correct mapping
+        const settings: any = await prisma.settings.findFirst();
+
+        if (!settings) {
+            console.error("No settings found for email sending.");
+            return false;
+        }
 
         if (!settings) {
             console.error("No settings found for email sending.");
