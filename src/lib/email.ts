@@ -133,7 +133,7 @@ export async function sendReservationEmail(reservation: any, type: 'PENDING' | '
             cid: logoCid
         });
 
-        await transporter.sendMail({
+        const mailOptions: any = {
             from: `"${settings.restaurantName || 'Reservas'}" <${settings.smtpUser}>`,
             to: reservation.email,
             subject: subject,
@@ -145,7 +145,40 @@ export async function sendReservationEmail(reservation: any, type: 'PENDING' | '
                 method: 'request',
                 content: icsContent
             }
-        });
+        };
+
+        // 1. Send Client Email
+        await transporter.sendMail(mailOptions);
+
+        // 2. Send Admin Notification (Internal)
+        if (settings.adminEmail) {
+            const adminSubject = `🔔 Nueva Reserva: ${reservation.firstName} ${reservation.lastName} (${reservation.guests} pax)`;
+            const adminText = `
+Confirmación de Nueva Reserva:
+
+Cliente: ${reservation.firstName} ${reservation.lastName}
+Email: ${reservation.email}
+Teléfono: ${reservation.phone || 'No indicado'}
+
+Fecha: ${new Date(reservation.date).toLocaleDateString("es-ES")}
+Hora: ${reservation.timeSlot}
+Comensales: ${reservation.guests}
+
+Alergias: ${reservation.allergies || 'Ninguna'}
+Notas: ${reservation.notes || 'Ninguna'}
+
+Gestionar en el panel de administración.
+            `;
+
+            await transporter.sendMail({
+                from: `"${settings.restaurantName || 'Reservas'}" <${settings.smtpUser}>`,
+                to: settings.adminEmail,
+                subject: adminSubject,
+                text: adminText,
+                html: adminText.replace(/\n/g, '<br>')
+            });
+            console.log(`Admin notification sent to ${settings.adminEmail}`);
+        }
 
         console.log(`Email sent successfully to ${reservation.email}`);
 

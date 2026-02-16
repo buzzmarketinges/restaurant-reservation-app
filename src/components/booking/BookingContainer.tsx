@@ -225,7 +225,7 @@ export default function BookingContainer() {
 
                             <div className={styles.ticketItem}>
                                 <div className={styles.ticketLabel}>
-                                    <span>👥</span> INVITADOS
+                                    <span>👥</span> COMENSALES
                                 </div>
                                 <div className={styles.ticketValue}>
                                     {guests} personas
