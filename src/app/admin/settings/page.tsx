@@ -41,6 +41,7 @@ export default function SettingsPage() {
         logoPath: '',
 
         // Email
+        adminEmail: '',
         emailSubjectPending: '',
         emailTemplatePending: '',
         emailSubjectConfirmed: '',
@@ -445,6 +446,15 @@ export default function SettingsPage() {
                 {activeTab === 'email' && (
                     <div className={styles.section}>
                         {/* Existing Email Fields */}
+                        <h4 style={{ color: 'var(--md-sys-color-primary)', marginTop: '24px' }}>Configuración General</h4>
+                        <div style={{ display: 'grid', gap: '16px', marginBottom: '24px' }}>
+                            <div>
+                                <label className={styles.label}>Email del Administrador (Notificaciones)</label>
+                                <input className={styles.input} placeholder="admin@restaurante.com" value={form.adminEmail || ''} onChange={e => setForm({ ...form, adminEmail: e.target.value })} />
+                                <p style={{ fontSize: '0.8rem', color: '#888', marginTop: '4px' }}>Recibirá una copia de todas las reservas y notificaciones del sistema.</p>
+                            </div>
+                        </div>
+
                         <h4 style={{ color: 'var(--md-sys-color-primary)', marginTop: '24px' }}>Plantillas</h4>
                         <div style={{ display: 'grid', gap: '16px' }}>
                             <input className={styles.input} placeholder="Asunto Pendiente" value={form.emailSubjectPending} onChange={e => setForm({ ...form, emailSubjectPending: e.target.value })} />
