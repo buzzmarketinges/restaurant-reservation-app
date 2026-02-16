@@ -81,6 +81,12 @@ a {
   --rdp-cell-size: 45px;
   --rdp-accent-color: var(--md-sys-color-primary) !important;
   --rdp-background-color: var(--md-sys-color-primary-container) !important;
+
+  /* Force Override Internal Variables */
+  --rdp-selected-border: none !important;
+  --rdp-day_button-border: none !important;
+  --rdp-day_button-border-radius: 12px !important;
+
   margin: 0;
 }
 
@@ -133,7 +139,9 @@ a {
 }
 
 /* Selected Date - Solid Gold Squircle */
+/* Targeting all possible variations to kill the blue border */
 .rdp-day_selected,
+.rdp-selected .rdp-day_button,
 .rdp-day_selected:focus-visible,
 .rdp-day_selected:hover {
   background-color: var(--md-sys-color-primary) !important;
@@ -141,6 +149,7 @@ a {
   font-weight: 900;
   border-radius: 12px !important;
   border: none !important;
+  outline: none !important;
   box-shadow: 0 0 15px rgba(235, 196, 93, 0.4);
 }
 
@@ -150,6 +159,7 @@ a {
   outline: none !important;
   background-color: rgba(235, 196, 93, 0.1);
   border-radius: 12px;
+  border-color: transparent !important;
 }
 
 /* Caption Label (Month Name) - Force White/Gold */
