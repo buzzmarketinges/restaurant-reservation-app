@@ -79,9 +79,14 @@ a {
 /* React Day Picker Global Overrides - EXACT MATCH */
 .rdp {
   --rdp-cell-size: 45px;
-  --rdp-accent-color: var(--md-sys-color-primary);
-  --rdp-background-color: var(--md-sys-color-primary-container);
+  --rdp-accent-color: var(--md-sys-color-primary) !important;
+  --rdp-background-color: var(--md-sys-color-primary-container) !important;
   margin: 0;
+}
+
+/* Force Chevron (Arrows) Color */
+.rdp-chevron {
+  fill: var(--md-sys-color-primary) !important;
 }
 
 /* Weekday Headers (SUN, MON...) */
@@ -105,13 +110,11 @@ a {
 /* Default Day Style */
 .rdp-day {
   color: #888888;
-  /* Dimmed by default */
   font-weight: 500;
 }
 
 .rdp-day_outside {
   opacity: 0.3;
-  /* Extra dimmed for outside days */
 }
 
 /* Hover State for Days */
@@ -142,8 +145,15 @@ a {
 }
 
 /* Remove default focus rings */
-.rdp-button:focus-visible {
+.rdp-button:focus-visible,
+.rdp-button:focus {
   outline: none !important;
   background-color: rgba(235, 196, 93, 0.1);
   border-radius: 12px;
+}
+
+/* Caption Label (Month Name) - Force White/Gold */
+.rdp-caption_label {
+  color: #ffffff !important;
+  font-weight: 700;
 }
