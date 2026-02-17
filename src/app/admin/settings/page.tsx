@@ -460,9 +460,26 @@ export default function SettingsPage() {
 
                         <h4 style={{ color: 'var(--md-sys-color-primary)', marginTop: '24px' }}>Plantillas</h4>
                         <div style={{ display: 'grid', gap: '16px' }}>
-                            <input className={styles.input} placeholder="Asunto Pendiente" value={form.emailSubjectPending} onChange={e => setForm({ ...form, emailSubjectPending: e.target.value })} />
-                            <input className={styles.input} placeholder="Asunto Confirmada" value={form.emailSubjectConfirmed} onChange={e => setForm({ ...form, emailSubjectConfirmed: e.target.value })} />
-                            <input className={styles.input} placeholder="Asunto Cancelada" value={form.emailSubjectCanceled} onChange={e => setForm({ ...form, emailSubjectCanceled: e.target.value })} />
+                            <div style={{ display: 'grid', gap: '8px' }}>
+                                <label className={styles.label}>Asunto (Pendiente)</label>
+                                <input className={styles.input} placeholder="Asunto Pendiente" value={form.emailSubjectPending} onChange={e => setForm({ ...form, emailSubjectPending: e.target.value })} />
+                                <label className={styles.label}>Plantilla HTML (Pendiente)</label>
+                                <textarea className={styles.input} style={{ minHeight: '150px', fontFamily: 'monospace', fontSize: '0.9rem' }} placeholder="HTML Template" value={form.emailTemplatePending} onChange={e => setForm({ ...form, emailTemplatePending: e.target.value })} />
+                            </div>
+
+                            <div style={{ display: 'grid', gap: '8px' }}>
+                                <label className={styles.label}>Asunto (Confirmada)</label>
+                                <input className={styles.input} placeholder="Asunto Confirmada" value={form.emailSubjectConfirmed} onChange={e => setForm({ ...form, emailSubjectConfirmed: e.target.value })} />
+                                <label className={styles.label}>Plantilla HTML (Confirmada)</label>
+                                <textarea className={styles.input} style={{ minHeight: '150px', fontFamily: 'monospace', fontSize: '0.9rem' }} placeholder="HTML Template" value={form.emailTemplateConfirmed} onChange={e => setForm({ ...form, emailTemplateConfirmed: e.target.value })} />
+                            </div>
+
+                            <div style={{ display: 'grid', gap: '8px' }}>
+                                <label className={styles.label}>Asunto (Cancelada)</label>
+                                <input className={styles.input} placeholder="Asunto Cancelada" value={form.emailSubjectCanceled} onChange={e => setForm({ ...form, emailSubjectCanceled: e.target.value })} />
+                                <label className={styles.label}>Plantilla HTML (Cancelada)</label>
+                                <textarea className={styles.input} style={{ minHeight: '150px', fontFamily: 'monospace', fontSize: '0.9rem' }} placeholder="HTML Template" value={form.emailTemplateCanceled} onChange={e => setForm({ ...form, emailTemplateCanceled: e.target.value })} />
+                            </div>
                         </div>
 
                         <h4 style={{ color: 'var(--md-sys-color-primary)', marginTop: '24px' }}>SMTP</h4>

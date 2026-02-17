@@ -108,13 +108,22 @@ export async function sendReservationEmail(reservation: any, type: 'PENDING' | '
                 break;
         }
 
+        const dateObj = new Date(reservation.date);
         const vars: Record<string, string> = {
             '%firstName%': reservation.firstName,
             '%lastName%': reservation.lastName,
             '%guests%': reservation.guests.toString(),
-            '%date%': new Date(reservation.date).toLocaleDateString("es-ES"),
+            '%date%': dateObj.toLocaleDateString("es-ES"),
+            '%dateDay%': dateObj.getDate().toString(),
+            '%dateMonth%': dateObj.toLocaleDateString("es-ES", { month: 'long' }),
+            '%dateYear%': dateObj.getFullYear().toString(),
             '%time%': reservation.timeSlot,
-            '%restaurantName%': settings.restaurantName || "Restaurante"
+            '%restaurantName%': settings.restaurantName || "Restaurante",
+            '%id%': reservation.id.split('-')[0].toUpperCase(),
+            '%address%': settings.address || "",
+            '%allergies%': reservation.allergies || "Ninguna",
+            '%notes%': reservation.notes || "Ninguna",
+            '%phone%': reservation.phone || "",
         };
 
         Object.keys(vars).forEach(key => {
@@ -126,20 +135,43 @@ export async function sendReservationEmail(reservation: any, type: 'PENDING' | '
         const icsContent = generateICS(reservation, settings);
 
         // Attachments logic
-        let logoPath = path.join(process.cwd(), 'src', 'app', 'media', 'loremar.jpg');
-        let logoFilename = 'loremar.jpg';
+        // Attachments logic
+        const attachments: any[] = [];
+        let logoFilename = 'logo.jpg';
 
         if (settings.logoPath) {
-            const relativePath = settings.logoPath.startsWith('/') ? settings.logoPath.substring(1) : settings.logoPath;
-            logoPath = path.join(process.cwd(), 'public', relativePath);
-            logoFilename = path.basename(logoPath);
+            if (settings.logoPath.startsWith('data:')) {
+                // Handle Base64 Data URI
+                try {
+                    const matches = settings.logoPath.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+                    if (matches && matches.length === 3) {
+                        const contentType = matches[1];
+                        const base64Data = matches[2];
+                        attachments.push({
+                            filename: 'logo.jpg',
+                            content: Buffer.from(base64Data, 'base64'),
+                            contentType: contentType,
+                            cid: 'restaurant-logo'
+                        });
+                        log("[Email] Attached logo from Base64 data.");
+                    } else {
+                        log("[Email] Invalid Data URI format for logo.");
+                    }
+                } catch (e) {
+                    errorLog("Failed to parse Base64 logo", e);
+                }
+            } else {
+                // Handle File Path
+                const relativePath = settings.logoPath.startsWith('/') ? settings.logoPath.substring(1) : settings.logoPath;
+                const logoPath = path.join(process.cwd(), 'public', relativePath);
+                logoFilename = path.basename(logoPath);
+                attachments.push({
+                    filename: logoFilename,
+                    path: logoPath,
+                    cid: 'restaurant-logo'
+                });
+            }
         }
-
-        const attachments = [{
-            filename: logoFilename,
-            path: logoPath,
-            cid: 'restaurant-logo'
-        }];
 
         const mailOptions: any = {
             from: `"${settings.restaurantName || 'Reservas'}" <${settings.smtpUser}>`,
