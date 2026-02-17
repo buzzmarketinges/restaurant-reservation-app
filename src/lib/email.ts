@@ -179,7 +179,7 @@ export async function sendReservationEmail(reservation: any, type: 'PENDING' | '
             subject: subject,
             text: text,
             html: text,
-            attachments: attachments,
+            // attachments: attachments, // Disabled per user request
             icalEvent: {
                 filename: 'invite.ics',
                 method: 'request',
@@ -196,8 +196,23 @@ export async function sendReservationEmail(reservation: any, type: 'PENDING' | '
 
         if (settings.adminEmail) {
             log(`[Email] Sending Admin Notification to ${settings.adminEmail}`);
-            const adminSubject = `🔔 Nueva Reserva: ${reservation.firstName} (${reservation.guests} pax)`;
-            const adminText = `Nueva reserva de ${reservation.firstName} ${reservation.lastName} para el ${new Date(reservation.date).toLocaleDateString()} a las ${reservation.timeSlot}.`;
+            const adminSubject = `🔔 Nueva Reserva: ${reservation.firstName} ${reservation.lastName} (${reservation.guests} pax)`;
+            const adminText = `
+📢 **Nueva Reserva Recibida**
+
+👤 **Cliente:** ${reservation.firstName} ${reservation.lastName}
+📧 **Email:** ${reservation.email}
+📞 **Teléfono:** ${reservation.phone || 'No indicado'}
+
+📅 **Fecha:** ${dateObj.toLocaleDateString("es-ES")}
+🕒 **Hora:** ${reservation.timeSlot}
+👥 **Comensales:** ${reservation.guests}
+
+🚫 **Alergias:** ${reservation.allergies || 'Ninguna'}
+📝 **Notas:** ${reservation.notes || 'Ninguna'}
+
+Gestionar en el panel de administración.
+`;
 
             try {
                 await transporter.sendMail({
