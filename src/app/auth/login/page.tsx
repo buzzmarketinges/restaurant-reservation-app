@@ -50,14 +50,14 @@ function LoginContent() {
 
                 <form onSubmit={handleSubmit} className={styles.form}>
                     <div className={styles.group}>
-                        <label className={styles.label}>Email</label>
+                        <label className={styles.label}>Usuario</label>
                         <input
-                            type="email"
+                            type="text"
                             className={styles.input}
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
-                            placeholder="admin@restaurante.com"
+                            placeholder="Usuario o Email"
                         />
                     </div>
 

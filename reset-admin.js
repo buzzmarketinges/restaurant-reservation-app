@@ -4,13 +4,17 @@ const bcrypt = require('bcrypt');
 const prisma = new PrismaClient();
 
 async function main() {
-    const email = 'info@restaurantloremar.com';
-    const password = 'admin123';
+    const currentEmail = 'info@restaurantloremar.com';
+    const newEmail = 'LoremarRestaurante';
+    const password = 'Loremar2026!';
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = await prisma.user.update({
-        where: { email },
-        data: { password: hashedPassword },
+        where: { email: currentEmail },
+        data: {
+            email: newEmail,
+            password: hashedPassword
+        },
     });
 
     console.log(`Password for user ${user.email} has been reset to: ${password}`);
