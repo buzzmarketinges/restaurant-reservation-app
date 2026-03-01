@@ -173,6 +173,10 @@ function generateSlots(start: string, end: string, intervalMinutes: number): str
     const finish = new Date();
     finish.setHours(endH, endM, 0, 0);
 
+    if (finish < current) {
+        finish.setDate(finish.getDate() + 1);
+    }
+
     // Safety break to prevent infinite loops if bad config
     let loops = 0;
     while (current <= finish && loops < 100) {
