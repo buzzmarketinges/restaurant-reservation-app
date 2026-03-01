@@ -11,8 +11,8 @@ import { es } from 'date-fns/locale';
 // Ensure standard schedule covers all days 0-6
 const DEFAULT_SCHEDULE = {
     isOpen: true,
-    lunch: { start: '13:00', end: '16:00' },
-    dinner: { start: '20:00', end: '23:00' }
+    lunch: { isOpen: true, start: '13:00', end: '16:00' },
+    dinner: { isOpen: true, start: '20:00', end: '23:00' }
 };
 
 const DAYS = [
@@ -162,7 +162,7 @@ export default function SettingsPage() {
         }));
     };
 
-    const updateScheduleTime = (dayId: number, shift: 'lunch' | 'dinner', type: 'start' | 'end', val: string) => {
+    const updateScheduleTime = (dayId: number, shift: 'lunch' | 'dinner', type: string, val: any) => {
         setForm((prev: any) => ({
             ...prev,
             schedules: {
@@ -373,16 +373,28 @@ export default function SettingsPage() {
                                         {sched.isOpen && (
                                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
                                                 <div>
-                                                    <span style={{ display: 'block', fontSize: '0.85rem', marginBottom: '8px', color: 'var(--md-sys-color-secondary)' }}>Comida</span>
-                                                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                                                        <span style={{ fontSize: '0.85rem', color: 'var(--md-sys-color-secondary)' }}>Comida</span>
+                                                        <label style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.8rem', color: 'var(--md-sys-color-secondary)', cursor: 'pointer' }}>
+                                                            {sched.lunch?.isOpen !== false ? 'Abierto' : 'Cerrado'}
+                                                            <input type="checkbox" checked={sched.lunch?.isOpen !== false} onChange={e => updateScheduleTime(day.id, 'lunch', 'isOpen', e.target.checked)} style={{ accentColor: 'var(--md-sys-color-primary)' }} />
+                                                        </label>
+                                                    </div>
+                                                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center', opacity: sched.lunch?.isOpen !== false ? 1 : 0.5, pointerEvents: sched.lunch?.isOpen !== false ? 'auto' : 'none' }}>
                                                         <input type="time" className={styles.input} style={{ padding: '8px' }} value={sched.lunch?.start} onChange={e => updateScheduleTime(day.id, 'lunch', 'start', e.target.value)} />
                                                         <span>-</span>
                                                         <input type="time" className={styles.input} style={{ padding: '8px' }} value={sched.lunch?.end} onChange={e => updateScheduleTime(day.id, 'lunch', 'end', e.target.value)} />
                                                     </div>
                                                 </div>
                                                 <div>
-                                                    <span style={{ display: 'block', fontSize: '0.85rem', marginBottom: '8px', color: 'var(--md-sys-color-secondary)' }}>Cena</span>
-                                                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                                                        <span style={{ fontSize: '0.85rem', color: 'var(--md-sys-color-secondary)' }}>Cena</span>
+                                                        <label style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.8rem', color: 'var(--md-sys-color-secondary)', cursor: 'pointer' }}>
+                                                            {sched.dinner?.isOpen !== false ? 'Abierto' : 'Cerrado'}
+                                                            <input type="checkbox" checked={sched.dinner?.isOpen !== false} onChange={e => updateScheduleTime(day.id, 'dinner', 'isOpen', e.target.checked)} style={{ accentColor: 'var(--md-sys-color-primary)' }} />
+                                                        </label>
+                                                    </div>
+                                                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center', opacity: sched.dinner?.isOpen !== false ? 1 : 0.5, pointerEvents: sched.dinner?.isOpen !== false ? 'auto' : 'none' }}>
                                                         <input type="time" className={styles.input} style={{ padding: '8px' }} value={sched.dinner?.start} onChange={e => updateScheduleTime(day.id, 'dinner', 'start', e.target.value)} />
                                                         <span>-</span>
                                                         <input type="time" className={styles.input} style={{ padding: '8px' }} value={sched.dinner?.end} onChange={e => updateScheduleTime(day.id, 'dinner', 'end', e.target.value)} />

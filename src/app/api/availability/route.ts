@@ -20,10 +20,10 @@ export async function GET(request: Request) {
         const dayOfWeek = targetDate.getDay(); // 0-6
 
         // 2. Load Settings from DB (Raw Query to avoid stale client)
-        let config = {
+        let config: any = {
             daysOpen: [1, 2, 3, 4, 5, 6],
-            lunch: { start: "13:00", end: "15:30" },
-            dinner: { start: "20:00", end: "22:30" },
+            lunch: { start: "13:00", end: "15:30", isOpen: true },
+            dinner: { start: "20:00", end: "22:30", isOpen: true },
             interval: 30
         };
 
@@ -37,6 +37,17 @@ export async function GET(request: Request) {
             console.warn('DB Settings fetch failed, using defaults:', dbError);
         }
 
+
+        let lunchConfig = config.lunch;
+        let dinnerConfig = config.dinner;
+        let isGlobalDayClosed = !config.daysOpen.includes(dayOfWeek);
+
+        if (config.schedules && config.schedules[dayOfWeek]) {
+            const daySched = config.schedules[dayOfWeek];
+            isGlobalDayClosed = !daySched.isOpen;
+            lunchConfig = daySched.lunch || lunchConfig;
+            dinnerConfig = daySched.dinner || dinnerConfig;
+        }
 
         // 1.5 Check Special Days (Overrides)
         const specialDay = await prisma.specialDay.findUnique({
@@ -53,32 +64,34 @@ export async function GET(request: Request) {
             }
             // Override config with special day hours if present
             if (specialDay.lunchStart && specialDay.lunchEnd) {
-                config.lunch = { start: specialDay.lunchStart, end: specialDay.lunchEnd };
+                lunchConfig = { ...lunchConfig, start: specialDay.lunchStart, end: specialDay.lunchEnd, isOpen: true };
             }
             if (specialDay.dinnerStart && specialDay.dinnerEnd) {
-                config.dinner = { start: specialDay.dinnerStart, end: specialDay.dinnerEnd };
+                dinnerConfig = { ...dinnerConfig, start: specialDay.dinnerStart, end: specialDay.dinnerEnd, isOpen: true };
             }
-            // If open on special day, ignore daysOpen check? 
-            // Usually yes, a special day implies it IS open unless isClosed=true.
-            // So we skip the "daysOpen" check below.
+            isGlobalDayClosed = false;
         } else {
             // Standard Check
-            if (!config.daysOpen.includes(dayOfWeek)) {
+            if (isGlobalDayClosed) {
                 return NextResponse.json({
                     date: dateString,
                     slots: [],
                     message: 'El restaurante está cerrado este día.'
                 });
             }
-
-            // TODO: In future, if we implement per-day standard schedule in config,
-            // we would check it here before falling back to global config.lunch.
-            // For now, staying with global lunch/dinner times unless special day override.
         }
 
         // Generate slots
-        const lunchSlots = generateSlots(config.lunch.start, config.lunch.end, config.interval);
-        const dinnerSlots = generateSlots(config.dinner.start, config.dinner.end, config.interval);
+        const lunchSlots = lunchConfig.isOpen !== false ? generateSlots(lunchConfig.start, lunchConfig.end, config.interval) : [];
+        const dinnerSlots = dinnerConfig.isOpen !== false ? generateSlots(dinnerConfig.start, dinnerConfig.end, config.interval) : [];
+
+        if (lunchSlots.length === 0 && dinnerSlots.length === 0) {
+            return NextResponse.json({
+                date: dateString,
+                slots: [],
+                message: 'No hay horarios disponibles este día.'
+            });
+        }
 
         // 3. Fetch Existing Reservations
         const startOfDay = new Date(targetDate);
