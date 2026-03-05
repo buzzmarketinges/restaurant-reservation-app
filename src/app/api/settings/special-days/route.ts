@@ -9,6 +9,7 @@ const specialDaySchema = z.object({
     lunchEnd: z.string().optional(),
     dinnerStart: z.string().optional(),
     dinnerEnd: z.string().optional(),
+    maxReservations: z.number().nullable().optional(),
 });
 
 export async function GET(request: Request) {
@@ -37,6 +38,7 @@ export async function POST(request: Request) {
                 lunchEnd: data.lunchEnd,
                 dinnerStart: data.dinnerStart,
                 dinnerEnd: data.dinnerEnd,
+                maxReservations: data.maxReservations,
             },
             create: {
                 date: dateObj,
@@ -45,6 +47,7 @@ export async function POST(request: Request) {
                 lunchEnd: data.lunchEnd,
                 dinnerStart: data.dinnerStart,
                 dinnerEnd: data.dinnerEnd,
+                maxReservations: data.maxReservations,
             }
         });
 

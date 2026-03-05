@@ -117,6 +117,19 @@ export async function GET(request: Request) {
             // Let's assume empty for now to unblock UI dev.
         }
 
+        // Check if day has reached special max reservations limit
+        if (specialDay && specialDay.maxReservations != null) {
+            // Count total people or total bookings? The user said "Máximo de reservas", usually meaning bookings. But often restaurants mean guests.
+            // "el motor de reserva no dejará reservar para más de 4" -> Let's count total reservations (length).
+            if (existingReservations.length >= specialDay.maxReservations) {
+                return NextResponse.json({
+                    date: dateString,
+                    slots: [],
+                    message: 'Capacidad máxima de reservas alcanzada para este día especial.'
+                });
+            }
+        }
+
         // 4. Calculate Availability
         const MAX_CAPACITY_PER_SLOT = 10;
         const now = new Date();

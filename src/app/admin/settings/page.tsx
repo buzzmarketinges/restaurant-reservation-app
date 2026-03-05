@@ -68,7 +68,8 @@ export default function SettingsPage() {
         lunchStart: '13:00',
         lunchEnd: '16:00',
         dinnerStart: '20:00',
-        dinnerEnd: '23:00'
+        dinnerEnd: '23:00',
+        maxReservations: '' as number | string
     });
 
     useEffect(() => {
@@ -201,7 +202,8 @@ export default function SettingsPage() {
                 lunchStart: existing.lunchStart || '13:00',
                 lunchEnd: existing.lunchEnd || '16:00',
                 dinnerStart: existing.dinnerStart || '20:00',
-                dinnerEnd: existing.dinnerEnd || '23:00'
+                dinnerEnd: existing.dinnerEnd || '23:00',
+                maxReservations: existing.maxReservations ?? ''
             });
         } else {
             setSpecialDayForm({
@@ -209,7 +211,8 @@ export default function SettingsPage() {
                 lunchStart: '13:00',
                 lunchEnd: '16:00',
                 dinnerStart: '20:00',
-                dinnerEnd: '23:00'
+                dinnerEnd: '23:00',
+                maxReservations: ''
             });
         }
 
@@ -222,7 +225,8 @@ export default function SettingsPage() {
 
         const payload = {
             date: format(selectedSpecialDay, 'yyyy-MM-dd'),
-            ...specialDayForm
+            ...specialDayForm,
+            maxReservations: specialDayForm.maxReservations === '' ? null : Number(specialDayForm.maxReservations)
         };
 
         try {
@@ -340,12 +344,27 @@ export default function SettingsPage() {
                     <div className={styles.section}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
                             <h3 className={styles.sectionTitle}>Horario Semanal</h3>
-                            <button type="button" onClick={copyMonday} style={{
-                                padding: '8px 16px', background: 'var(--md-sys-color-surface-variant)',
-                                border: 'none', borderRadius: '8px', color: 'var(--md-sys-color-on-surface)', cursor: 'pointer'
-                            }}>
-                                Copiar Lunes a todos
-                            </button>
+
+                            <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+                                <label style={{ fontSize: '0.9rem', color: 'var(--md-sys-color-secondary)' }}>Intervalos (minutos):</label>
+                                <select
+                                    className={styles.input}
+                                    style={{ width: 'auto', padding: '8px' }}
+                                    value={form.interval || 30}
+                                    onChange={e => setForm({ ...form, interval: Number(e.target.value) })}
+                                >
+                                    <option value={15}>15</option>
+                                    <option value={30}>30</option>
+                                </select>
+
+                                <button type="button" onClick={copyMonday} style={{
+                                    padding: '8px 16px', background: 'var(--md-sys-color-surface-variant)',
+                                    border: 'none', borderRadius: '8px', color: 'var(--md-sys-color-on-surface)', cursor: 'pointer',
+                                    marginLeft: '16px'
+                                }}>
+                                    Copiar Lunes a todos
+                                </button>
+                            </div>
                         </div>
 
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -542,6 +561,17 @@ export default function SettingsPage() {
 
                         {!specialDayForm.isClosed && (
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                                <div>
+                                    <label className={styles.label}>Máximo de reservas para este día:</label>
+                                    <input
+                                        type="number"
+                                        className={styles.input}
+                                        placeholder="Ilimitado (dejar vacío)"
+                                        value={specialDayForm.maxReservations}
+                                        onChange={e => setSpecialDayForm({ ...specialDayForm, maxReservations: e.target.value })}
+                                        style={{ width: '100%', marginBottom: '16px' }}
+                                    />
+                                </div>
                                 <div>
                                     <label className={styles.label}>Horario Comida</label>
                                     <div style={{ display: 'flex', gap: '8px' }}>
