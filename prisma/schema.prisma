@@ -44,6 +44,7 @@ model Settings {
   smtpUser               String   @default("")
   smtpPass               String   @default("")
   adminEmail             String   @default("")
+  directConfirmation    Boolean  @default(true)
 }
 
 model SpecialDay {

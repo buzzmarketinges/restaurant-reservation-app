@@ -35,7 +35,8 @@ const settingsSchema = z.object({
     schedules: z.any().optional(),
 
     // Interval config
-    interval: z.number().optional()
+    interval: z.number().optional(),
+    directConfirmation: z.boolean().optional()
 });
 
 const DEFAULT_CONFIG = {
@@ -78,7 +79,8 @@ export async function GET() {
             smtpHost: settings.smtpHost || "",
             smtpPort: settings.smtpPort || 587,
             smtpUser: settings.smtpUser || "",
-            smtpPass: settings.smtpPass || ""
+            smtpPass: settings.smtpPass || "",
+            directConfirmation: settings.directConfirmation
         });
     } catch (error) {
         console.error('Settings GET Error:', error);
@@ -125,7 +127,8 @@ export async function POST(request: Request) {
                     smtpHost: data.smtpHost,
                     smtpPort: data.smtpPort || 587,
                     smtpUser: data.smtpUser,
-                    smtpPass: data.smtpPass
+                    smtpPass: data.smtpPass,
+                    directConfirmation: data.directConfirmation
                 } as any
             });
         } else {
@@ -148,7 +151,8 @@ export async function POST(request: Request) {
                     smtpHost: data.smtpHost,
                     smtpPort: data.smtpPort || 587,
                     smtpUser: data.smtpUser,
-                    smtpPass: data.smtpPass
+                    smtpPass: data.smtpPass,
+                    directConfirmation: data.directConfirmation
                 } as any
             });
         }

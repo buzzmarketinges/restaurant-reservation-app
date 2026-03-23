@@ -328,6 +328,23 @@ export default function SettingsPage() {
                                 <input className={styles.input} value={form.address} onChange={e => setForm({ ...form, address: e.target.value })} />
                             </div>
                             <div>
+                                <label className={styles.label}>Modo de Confirmación</label>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '8px' }}>
+                                    <input 
+                                        type="checkbox" 
+                                        checked={form.directConfirmation !== false} 
+                                        onChange={e => setForm({ ...form, directConfirmation: e.target.checked })} 
+                                        style={{ width: '22px', height: '22px', accentColor: 'var(--md-sys-color-primary)', cursor: 'pointer' }} 
+                                    />
+                                    <span style={{ fontSize: '1rem' }}>
+                                        {form.directConfirmation !== false ? "Confirmación Directa" : "Esperar a Confirmación (Solicitud Recibida)"}
+                                    </span>
+                                </div>
+                                <p style={{ fontSize: '0.85rem', color: '#888', marginTop: '4px' }}>
+                                    Si está desactivado, las reservas nuevas quedarán como "Esperando Confirmación" (Pendiente) hasta que las apruebe el administrador.
+                                </p>
+                            </div>
+                            <div>
                                 <label className={styles.label}>Logo</label>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginTop: '8px' }}>
                                     {form.logoPath && (

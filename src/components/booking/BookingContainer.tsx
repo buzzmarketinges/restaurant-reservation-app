@@ -44,6 +44,7 @@ export default function BookingContainer() {
 
     const [submitting, setSubmitting] = useState(false);
     const [confirmedId, setConfirmedId] = useState<string | null>(null);
+    const [reservationStatus, setReservationStatus] = useState<'PENDING' | 'CONFIRMED' | null>(null);
     const [error, setError] = useState<string | null>(null);
 
     // Auto-set today on mount if needed, or stick to initial state
@@ -140,6 +141,7 @@ export default function BookingContainer() {
             const data = await res.json();
             if (!res.ok) throw new Error(data.error || 'Error al reservar');
             setConfirmedId(data.id);
+            setReservationStatus(data.status);
         } catch (err: any) {
             setError(err.message);
         } finally {
@@ -192,7 +194,9 @@ export default function BookingContainer() {
                         </svg>
                     </div>
 
-                    <h2 className={styles.confTitle}>¡Reserva Confirmada!</h2>
+                    <h2 className={styles.confTitle}>
+                        {reservationStatus === 'PENDING' ? '¡Solicitud Recibida!' : '¡Reserva Confirmada!'}
+                    </h2>
                     <p className={styles.confName}>{formData.firstName} {formData.lastName}</p>
 
                     <div className={styles.ticketCard}>
@@ -263,7 +267,9 @@ export default function BookingContainer() {
                     </div>
 
                     <p className={styles.footerNote}>
-                        Se enviará una confirmación adicional a su correo electrónico: {formData.email}.
+                        {reservationStatus === 'PENDING' 
+                            ? `Hemos recibido tu solicitud. Te enviaremos un correo electrónico cuando sea confirmada: ${formData.email}.`
+                            : `Se enviará una confirmación adicional a su correo electrónico: ${formData.email}.`}
                         <br />Por favor, llegue 10 minutos antes de su cita.
                     </p>
                 </div>
@@ -439,31 +445,7 @@ export default function BookingContainer() {
                             <input type="tel" className={styles.input} value={formData.phone} onChange={e => setFormData({ ...formData, phone: e.target.value })} />
                         </div>
 
-                        <div className={styles.inputGroup} style={{ background: 'rgba(255,255,255,0.05)', padding: '16px', borderRadius: '12px', border: '1px solid #333' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: hasAllergies ? '16px' : '0' }}>
-                                <input type="checkbox" id="allergyCheck" checked={hasAllergies} onChange={e => setHasAllergies(e.target.checked)} style={{ width: '20px', height: '20px', cursor: 'pointer', accentColor: 'var(--md-sys-color-primary)' }} />
-                                <label htmlFor="allergyCheck" className={styles.inputLabel} style={{ marginBottom: 0, cursor: 'pointer', color: hasAllergies ? 'var(--md-sys-color-primary)' : 'inherit' }}>
-                                    ¿Tienes alguna alergia o intolerancia?
-                                </label>
-                            </div>
 
-                            {hasAllergies && (
-                                <div style={{ animation: 'fadeIn 0.3s' }}>
-                                    <p style={{ fontSize: '0.85rem', marginBottom: '12px', color: '#ccc' }}>Selecciona los alérgenos:</p>
-                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
-                                        {COMMON_ALLERGENS.map(allergen => (
-                                            <label key={allergen} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.9rem', cursor: 'pointer', color: '#eee' }}>
-                                                <input type="checkbox" checked={selectedAllergens.includes(allergen)} onChange={() => toggleAllergen(allergen)} style={{ accentColor: 'var(--md-sys-color-primary)' }} />
-                                                {allergen}
-                                            </label>
-                                        ))}
-                                    </div>
-                                    <div style={{ marginTop: '12px' }}>
-                                        <input placeholder="Otros alérgenos..." className={styles.input} value={otherAllergy} onChange={e => setOtherAllergy(e.target.value)} />
-                                    </div>
-                                </div>
-                            )}
-                        </div>
 
                         <div className={styles.inputGroup}>
                             <label className={styles.inputLabel}>COMENTARIOS</label>

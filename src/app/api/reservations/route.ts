@@ -21,8 +21,10 @@ export async function POST(request: Request) {
         const body = await request.json();
         const data = reservationSchema.parse(body);
 
-        // 1. Double check availability (Simplified)
-        // In a real app, you'd use a transaction or checking logic here.
+        // 1. Fetch Settings to check directConfirmation
+        const settings: any = await prisma.settings.findFirst();
+        const autoConfirm = settings?.directConfirmation !== false; // default true
+        const status = autoConfirm ? 'CONFIRMED' : 'PENDING';
 
         // 2. Create Reservation
         const newReservation = await prisma.reservation.create({
@@ -37,17 +39,18 @@ export async function POST(request: Request) {
                 phone: data.phone,
                 allergies: data.allergies,
                 notes: data.notes,
-                status: 'PENDING'
+                status: status
             }
         });
 
         // 3. Send Email
-        await sendReservationEmail(newReservation, 'PENDING');
+        await sendReservationEmail(newReservation, status);
 
         return NextResponse.json({
             success: true,
             id: newReservation.id,
-            message: 'Reservation confirmed'
+            message: autoConfirm ? 'Reservation confirmed' : 'Request received',
+            status: status
         });
 
     } catch (error) {
